@@ -1,39 +1,146 @@
 #include "Cube.h"
+#include <map>
+#include <array>
+#include <string>
+using namespace std;
 
-// Construtor: cria uma matriz 2x2x2 de MiniCubes com valores zerados
-Cube::Cube() {
-    matriz = std::vector<std::vector<std::vector<MiniCube>>>(
-        2, std::vector<std::vector<MiniCube>>(
-            2, std::vector<MiniCube>(2)
-        )
-    );
+Cube::Cube() {}
+
+void Cube::init()
+{
+    // Mapa de cores, a posição real do cubo mágico contem 3 cores, left right e mid
+    map<string, array<int, 3>> colors = {
+        {"000", {4, 2, 0}},
+        {"001", {4, 2, 1}},
+        {"010", {3, 4, 0}},
+        {"011", {3, 4, 1}},
+        {"100", {2, 5, 0}},
+        {"101", {2, 5, 1}},
+        {"110", {5, 3, 0}},
+        {"111", {5, 3, 1}}};
+
+    // Loop que insere as cores na matriz
+    for (int x = 0; x < 2; ++x)
+    {
+        for (int y = 0; y < 2; ++y)
+        {
+            for (int z = 0; z < 2; ++z)
+            {
+                // Cria o nome da posição para identificação
+                char key[4];
+                snprintf(key, sizeof(key), "%d%d%d", x, y, z);
+
+                // Realiza a busca no mapa das cores
+                // Compilador utiliza o auto para deduzir qual a tipagem correta
+                auto it = colors.find(key);
+                if (it != colors.end())
+                {
+                    // Realiza a operação destructure, criando uma refêrencia dos dados left, right e mid recebidos da iteração do loop
+                    const auto &[left, right, mid] = it->second;
+                    // Cria uma instância de MiniCube e insere na matriz
+                    matrix[x][y][z] = MiniCube(key, left, right, mid);
+                }
+                else
+                {
+                    cerr << "Chave não encontrada: " << key << endl;
+                }
+            }
+        }
+    }
 }
-void Cube::preencher() {
-    for (int z = 0; z < 2; ++z) {
+
+void Cube::print() const
+{
+    for (int x = 0; x < 2; ++x)
+    {
+        for (int y = 0; y < 2; ++y)
+        {
+            for (int z = 0; z < 2; ++z)
+            {
+                const MiniCube &cube = matrix[x][y][z];
+                std::cout << x << " " << y << " " << z << " "
+                          << cube.name << " "
+                          << cube.left << " "
+                          << cube.right << " "
+                          << cube.mid << std::endl;
+            }
+        }
+    }
+}
+
+Cube Cube::cloneMatrix() const {
+    Cube newCube;
+
+    // Para cada posição da matriz realiza a funcão clone do cubinho, que é basicamente a criação de uma nova instância dele
+    for (int x = 0; x < 2; ++x) {
         for (int y = 0; y < 2; ++y) {
-            for (int x = 0; x < 2; ++x) {
-                char name[4];
-                sprintf(name, "%d%d%d", z, y, x); // nome da posição
-
-                int base = z * 4 + y * 2 + x * 1; // base para valores
-
-                matriz[z][y][x] = MiniCube(name, base + 1, base + 2, base + 3);
+            for (int z = 0; z < 2; ++z) {
+                newCube.matrix[x][y][z] = this->matrix[x][y][z].clone();
             }
         }
     }
+
+    return newCube;
 }
 
-// Imprime o conteúdo de cada MiniCube na matriz
-void Cube::imprimir() {
-    for (int i = 0; i < 2; ++i) {
-        std::cout << "Camada " << i << ":\n";
-        for (int j = 0; j < 2; ++j) {
-            for (int k = 0; k < 2; ++k) {
-                MiniCube& cube = matriz[i][j][k];
-                std::cout << "[" << cube.left << "," << cube.right << "," << cube.top << "] ";
-            }
-            std::cout << "\n";
-        }
-        std::cout << "\n";
-    }
+// Movimentações possíveis (que geram novos estado//novas instâncias do cubo)
+Cube Cube::U() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[0][0][0];
+    newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
+    newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
+    newCube.matrix[1][1][0] = newCube.matrix[0][1][0];
+    newCube.matrix[0][1][0] = temp;
+
+    return newCube;
+}
+
+Cube Cube::D() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[0][1][0];
+    newCube.matrix[0][1][0] = newCube.matrix[0][0][0];
+    newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
+    newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
+    newCube.matrix[1][1][0] = temp;
+
+    return newCube;
+}
+
+Cube Cube::R() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[0][0][0];
+    newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
+    newCube.matrix[0][0][1] = newCube.matrix[0][1][1];
+    newCube.matrix[0][1][1] = newCube.matrix[0][1][0];
+    newCube.matrix[0][1][0] = temp;
+
+    return newCube;
+}
+
+Cube Cube::L() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[0][0][0];
+    newCube.matrix[0][0][0] = newCube.matrix[0][1][0];
+    newCube.matrix[0][1][0] = newCube.matrix[0][1][1];
+    newCube.matrix[0][1][1] = newCube.matrix[0][0][1];
+    newCube.matrix[0][0][1] = temp;
+
+    return newCube;
+}
+
+
+Cube Cube::F() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[0][0][0];
+    newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
+    newCube.matrix[0][0][1] = newCube.matrix[0][1][1];
+    newCube.matrix[0][1][1] = newCube.matrix[0][1][0];
+    newCube.matrix[0][1][0] = temp;
+
+    return newCube;
 }

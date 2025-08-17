@@ -6,11 +6,12 @@ class MiniCube {
 public:
     int left;
     int right;
-    int top;
+    int mid;
     char name[4];
 
-    MiniCube(); // Construtor padrão
-    MiniCube(char name[4], int l, int r, int t); // Construtor com valores
+    MiniCube();
+    MiniCube(char n[4], int l, int r, int t); 
+    MiniCube clone() const;
 };
 
 #endif
