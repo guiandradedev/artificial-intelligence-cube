@@ -44,58 +44,81 @@ class Cube {
         this.matrix[x][y][z] = value;
     }
 
+    cloneMatrix() {
+        return this.matrix.map(layer =>
+            layer.map(row =>
+                row.map(cube => cube.clone())
+            )
+        );
+    }
+
     U() {
-        // Rotação para cima
-        const temp = this.matrix[0][0][0];
-        this.matrix[0][0][0] = this.matrix[1][0][0];
-        this.matrix[1][0][0] = this.matrix[1][1][0];
-        this.matrix[1][1][0] = this.matrix[0][1][0];
-        this.matrix[0][1][0] = temp;
+        // Rotação para frente
+        const newCube = new Cube();
+        newCube.matrix = this.cloneMatrix();
+
+        const temp = newCube.matrix[0][0][0];
+        newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
+        newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
+        newCube.matrix[1][1][0] = newCube.matrix[0][1][0];
+        newCube.matrix[0][1][0] = temp;
+
+        return newCube;
     }
 
     D() {
         // Rotação para baixo
+        const newCube = new Cube();
+        newCube.matrix = this.cloneMatrix();
         const temp = this.matrix[0][1][0];
-        this.matrix[0][1][0] = this.matrix[0][0][0];
-        this.matrix[0][0][0] = this.matrix[1][0][0];
-        this.matrix[1][0][0] = this.matrix[1][1][0];
-        this.matrix[1][1][0] = temp;
+        newCube.matrix[0][1][0] = newCube.matrix[0][0][0];
+        newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
+        newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
+        newCube.matrix[1][1][0] = temp;
     }
 
     B() {
         // Rotação para trás
-        const temp = this.matrix[0][0][1];
-        this.matrix[0][0][1] = this.matrix[1][0][1];
-        this.matrix[1][0][1] = this.matrix[1][1][1];
-        this.matrix[1][1][1] = this.matrix[0][1][1];
-        this.matrix[0][1][1] = temp;
+        const newCube = new Cube();
+        newCube.matrix = this.cloneMatrix();
+        const temp = newCube.matrix[0][0][1];
+        newCube.matrix[0][0][1] = newCube.matrix[1][0][1];
+        newCube.matrix[1][0][1] = newCube.matrix[1][1][1];
+        newCube.matrix[1][1][1] = newCube.matrix[0][1][1];
+        newCube.matrix[0][1][1] = temp;
     }
 
     R() {
         // Rotação para a direita
-        const temp = this.matrix[0][0][0];
-        this.matrix[0][0][0] = this.matrix[0][0][1];
-        this.matrix[0][0][1] = this.matrix[0][1][1];
-        this.matrix[0][1][1] = this.matrix[0][1][0];
-        this.matrix[0][1][0] = temp;
+        const newCube = new Cube();
+        newCube.matrix = this.cloneMatrix();
+        const temp = newCube.matrix[0][0][0];
+        newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
+        newCube.matrix[0][0][1] = newCube.matrix[0][1][1];
+        newCube.matrix[0][1][1] = newCube.matrix[0][1][0];
+        newCube.matrix[0][1][0] = temp;
     }
 
     L() {
         // Rotação para a esquerda
-        const temp = this.matrix[0][0][0];
-        this.matrix[0][0][0] = this.matrix[0][1][0];
-        this.matrix[0][1][0] = this.matrix[0][1][1];
-        this.matrix[0][1][1] = this.matrix[0][0][1];
-        this.matrix[0][0][1] = temp;
+        const newCube = new Cube();
+        newCube.matrix = this.cloneMatrix();
+        const temp = newCube.matrix[0][0][0];
+        newCube.matrix[0][0][0] = newCube.matrix[0][1][0];
+        newCube.matrix[0][1][0] = newCube.matrix[0][1][1];
+        newCube.matrix[0][1][1] = newCube.matrix[0][0][1];
+        newCube.matrix[0][0][1] = temp;
     }
 
     F() {
         // Rotação para frente
-        const temp = this.matrix[0][0][0];
-        this.matrix[0][0][0] = this.matrix[0][0][1];
-        this.matrix[0][0][1] = this.matrix[0][1][1];
-        this.matrix[0][1][1] = this.matrix[0][1][0];
-        this.matrix[0][1][0] = temp;
+        const newCube = new Cube();
+        newCube.matrix = this.cloneMatrix();
+        const temp = newCube.matrix[0][0][0];
+        newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
+        newCube.matrix[0][0][1] = newCube.matrix[0][1][1];
+        newCube.matrix[0][1][1] = newCube.matrix[0][1][0];
+        newCube.matrix[0][1][0] = temp;
     }
 
     print() {

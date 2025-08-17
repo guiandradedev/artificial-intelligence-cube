@@ -6,6 +6,10 @@ class MiniCube {
         this._mid = mid;
     }
 
+    clone() {
+        return new MiniCube(this.name, this.left, this.right, this.mid);
+    }
+
     get left() {
         return this._left;
     }
