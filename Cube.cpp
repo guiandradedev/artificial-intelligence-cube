@@ -144,3 +144,15 @@ Cube Cube::F() const {
 
     return newCube;
 }
+
+Cube Cube::B() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[0][0][1];
+    newCube.matrix[0][0][1] = newCube.matrix[1][0][1];
+    newCube.matrix[1][0][1] = newCube.matrix[1][1][1];
+    newCube.matrix[1][1][1] = newCube.matrix[0][1][1];
+    newCube.matrix[0][1][1] = temp;
+
+    return newCube;
+}
