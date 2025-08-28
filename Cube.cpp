@@ -2,6 +2,8 @@
 #include <map>
 #include <array>
 #include <string>
+#include <vector>
+
 using namespace std;
 
 Cube::Cube() {}
@@ -38,7 +40,7 @@ void Cube::init()
                     // Realiza a operação destructure, criando uma refêrencia dos dados left, right e mid recebidos da iteração do loop
                     const auto &[left, right, mid] = it->second;
                     // Cria uma instância de MiniCube e insere na matriz
-                    matrix[x][y][z] = MiniCube(key, left, right, mid);
+                    matrix[x][y][z] = MiniCube(key, left, right, mid, 0);
                 }
                 else
                 {
@@ -62,7 +64,8 @@ void Cube::print() const
                           << cube.name << " "
                           << cube.left << " "
                           << cube.right << " "
-                          << cube.mid << std::endl;
+                          << cube.mid << " "
+                          << cube.orientation << std::endl;
             }
         }
     }
@@ -117,6 +120,11 @@ Cube Cube::R() const {
     newCube.matrix[0][1][1] = newCube.matrix[0][1][0];
     newCube.matrix[0][1][0] = temp;
 
+    newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 1) % 3;
+    newCube.matrix[0][0][1].orientation = (newCube.matrix[0][0][1].orientation + 2) % 3;
+    newCube.matrix[0][1][1].orientation = (newCube.matrix[0][1][1].orientation + 1) % 3;
+    newCube.matrix[0][1][0].orientation = (newCube.matrix[0][1][0].orientation + 2) % 3;
+
     return newCube;
 }
 
@@ -128,6 +136,11 @@ Cube Cube::L() const {
     newCube.matrix[0][1][0] = newCube.matrix[0][1][1];
     newCube.matrix[0][1][1] = newCube.matrix[0][0][1];
     newCube.matrix[0][0][1] = temp;
+
+    newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 1) % 3;
+    newCube.matrix[0][1][0].orientation = (newCube.matrix[0][1][0].orientation + 2) % 3;
+    newCube.matrix[0][1][1].orientation = (newCube.matrix[0][1][1].orientation + 1) % 3;
+    newCube.matrix[0][0][1].orientation = (newCube.matrix[0][0][1].orientation + 2) % 3;
 
     return newCube;
 }
@@ -153,6 +166,61 @@ Cube Cube::B() const {
     newCube.matrix[1][0][1] = newCube.matrix[1][1][1];
     newCube.matrix[1][1][1] = newCube.matrix[0][1][1];
     newCube.matrix[0][1][1] = temp;
+
+    return newCube;
+}
+
+// Cube Cube::shuffle(int movements) const {
+//     vector<function<void()>> functions = {
+//         [this]() { U(); },
+//         [this]() { D(); },
+//         [this]() { R(); },
+//         [this]() { L(); },
+//         [this]() { F(); },
+//         [this]() { B(); },
+//     };
+
+//     int functionIndex = 0;
+//     Cube newCube;
+//     for(int i=0; i<movements; i++) {
+//         functionIndex = rand() % functions.size();
+//         newCube = functions[functionIndex]()
+//     }
+// }
+
+Cube Cube::shuffle(int movements) const {
+    Cube newCube = *this;  // começa com uma cópia do cubo atual
+    int functions_possible = 6;
+
+    for (int i = 0; i < movements; i++) {
+        int functionIndex = rand() % functions_possible;
+        switch(functionIndex){
+            case 0:
+                newCube = newCube.U(); 
+                cout << "Up" << endl;
+                break;
+            case 1:
+                newCube = newCube.D(); 
+                cout << "Down" << endl;
+                break;
+            case 2:
+                newCube = newCube.R(); 
+                cout << "Right" << endl;
+                break;
+            case 3:
+                newCube = newCube.L(); 
+                cout << "Left" << endl;
+                break;
+            case 4:
+                newCube = newCube.F(); 
+                cout << "Front" << endl;
+                break;
+            case 5:
+                newCube = newCube.B(); 
+                cout << "Back" << endl;
+                break;
+        }
+    }
 
     return newCube;
 }

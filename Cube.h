@@ -22,6 +22,8 @@ public:
     Cube B() const;
     Cube L() const;
     Cube R() const;
+
+    Cube shuffle(int movements) const;
     
 };
 

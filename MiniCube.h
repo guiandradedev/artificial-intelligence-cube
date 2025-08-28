@@ -8,9 +8,10 @@ public:
     int right;
     int mid;
     char name[4];
+    short int orientation;
 
     MiniCube();
-    MiniCube(char n[4], int l, int r, int t); 
+    MiniCube(char n[4], int l, int r, int t, short int orientation); 
     MiniCube clone() const;
 };
 
