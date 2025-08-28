@@ -10,16 +10,27 @@ Cube::Cube() {}
 
 void Cube::init()
 {
-    // Mapa de cores, a posição real do cubo mágico contem 3 cores, left right e mid
-    map<string, array<int, 3>> colors = {
-        {"000", {4, 2, 0}},
-        {"001", {4, 2, 1}},
-        {"010", {3, 4, 0}},
-        {"011", {3, 4, 1}},
-        {"100", {2, 5, 0}},
-        {"101", {2, 5, 1}},
-        {"110", {5, 3, 0}},
-        {"111", {5, 3, 1}}};
+    // // Mapa de cores, a posição real do cubo mágico contem 3 cores, left right e mid
+    // map<string, array<int, 3>> colors = {
+    //     {"000", {4, 2, 0}},
+    //     {"001", {4, 2, 1}},
+    //     {"010", {3, 4, 0}},
+    //     {"011", {3, 4, 1}},
+    //     {"100", {2, 5, 0}},
+    //     {"101", {2, 5, 1}},
+    //     {"110", {5, 3, 0}},
+    //     {"111", {5, 3, 1}}};
+
+    int colors[8][3] = {
+        {4, 2, 0},
+        {4, 2, 1},
+        {3, 4, 0},
+        {3, 4, 1},
+        {2, 5, 0},
+        {2, 5, 1},
+        {5, 3, 0},
+        {5, 3, 1}
+    };
 
     // Loop que insere as cores na matriz
     for (int x = 0; x < 2; ++x)
@@ -28,24 +39,30 @@ void Cube::init()
         {
             for (int z = 0; z < 2; ++z)
             {
-                // Cria o nome da posição para identificação
-                char key[4];
-                snprintf(key, sizeof(key), "%d%d%d", x, y, z);
+                int index = x * 4 + y * 2 + z;
+                int cube_colors[3];
+                for (int i = 0; i < 3; ++i) {
+                    cube_colors[i] = colors[index][i];
+                }
+                matrix[x][y][z] = MiniCube(cube_colors[0], cube_colors[1], cube_colors[2], 0);
+                // // Cria o nome da posição para identificação
+                // char key[4];
+                // snprintf(key, sizeof(key), "%d%d%d", x, y, z);
 
-                // Realiza a busca no mapa das cores
-                // Compilador utiliza o auto para deduzir qual a tipagem correta
-                auto it = colors.find(key);
-                if (it != colors.end())
-                {
-                    // Realiza a operação destructure, criando uma refêrencia dos dados left, right e mid recebidos da iteração do loop
-                    const auto &[left, right, mid] = it->second;
-                    // Cria uma instância de MiniCube e insere na matriz
-                    matrix[x][y][z] = MiniCube(key, left, right, mid, 0);
-                }
-                else
-                {
-                    cerr << "Chave não encontrada: " << key << endl;
-                }
+                // // Realiza a busca no mapa das cores
+                // // Compilador utiliza o auto para deduzir qual a tipagem correta
+                // auto it = colors.find(key);
+                // if (it != colors.end())
+                // {
+                //     // Realiza a operação destructure, criando uma refêrencia dos dados left, right e mid recebidos da iteração do loop
+                //     const auto &[left, right, mid] = it->second;
+                //     // Cria uma instância de MiniCube e insere na matriz
+                //     matrix[x][y][z] = MiniCube(key, left, right, mid, 0);
+                // }
+                // else
+                // {
+                //     cerr << "Chave não encontrada: " << key << endl;
+                // }
             }
         }
     }
@@ -61,7 +78,7 @@ void Cube::print() const
             {
                 const MiniCube &cube = matrix[x][y][z];
                 std::cout << x << " " << y << " " << z << " "
-                          << cube.name << " "
+                        //   << cube.name << " "
                           << cube.left << " "
                           << cube.right << " "
                           << cube.mid << " "
