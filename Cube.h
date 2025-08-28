@@ -16,12 +16,13 @@ public:
     void print() const;
     Cube cloneMatrix() const;
 
-    Cube U() const;
-    Cube D() const;
-    Cube F() const;
-    Cube B() const;
-    Cube L() const;
-    Cube R() const;
+    Cube U_FW() const;
+    Cube L_FW() const;
+    Cube F_FW() const;
+    Cube U_BW() const;
+    Cube L_BW() const;
+    Cube F_BW() const;
+    MiniCube position(int x, int y, int z);
 
     Cube shuffle(int movements) const;
     

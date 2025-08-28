@@ -1,5 +1,8 @@
 #include "Cube.h"
 
+// x - tras | frente
+// y - esquerda | direita
+// z - cima | baixo
 using namespace std;
 
 int main() {
@@ -8,13 +11,12 @@ int main() {
     cubo.print();
     cout << "" << endl;
 
-    Cube newCube = cubo.R();
+    cubo.position(0,0,0).print();
+    cubo.position(1,0,0).print();
 
-    cout << "" << endl;
-    newCube.print();
-    cout << "" << endl;
+    Cube newCube = cubo.cloneMatrix();
 
-    newCube = newCube.U();
+    newCube = newCube.U_FW();
 
     // cout << "" << endl;
     // newCube.print();

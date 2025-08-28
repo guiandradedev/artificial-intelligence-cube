@@ -1,7 +1,9 @@
 // MiniCube.cpp
 #include "MiniCube.h"
 #include <cstring>
+#include <iostream>
 
+using namespace std;
 MiniCube::MiniCube() : left(0), right(0), mid(0), orientation(0) {
     // strcpy(this->name, "");
 }
@@ -17,4 +19,12 @@ MiniCube MiniCube::clone() const {
     // strcpy(tempName, name);
     // return MiniCube(tempName, left, right, mid, orientation);
     return MiniCube(left, right, mid, orientation);
+}
+
+void MiniCube::print() {
+    cout << left << 
+            right <<
+            // name <<
+            mid << endl;
+
 }

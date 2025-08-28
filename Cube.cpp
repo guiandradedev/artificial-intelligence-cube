@@ -10,16 +10,6 @@ Cube::Cube() {}
 
 void Cube::init()
 {
-    // // Mapa de cores, a posição real do cubo mágico contem 3 cores, left right e mid
-    // map<string, array<int, 3>> colors = {
-    //     {"000", {4, 2, 0}},
-    //     {"001", {4, 2, 1}},
-    //     {"010", {3, 4, 0}},
-    //     {"011", {3, 4, 1}},
-    //     {"100", {2, 5, 0}},
-    //     {"101", {2, 5, 1}},
-    //     {"110", {5, 3, 0}},
-    //     {"111", {5, 3, 1}}};
 
     int colors[8][3] = {
         {4, 2, 0},
@@ -40,29 +30,13 @@ void Cube::init()
             for (int z = 0; z < 2; ++z)
             {
                 int index = x * 4 + y * 2 + z;
-                int cube_colors[3];
-                for (int i = 0; i < 3; ++i) {
-                    cube_colors[i] = colors[index][i];
-                }
-                matrix[x][y][z] = MiniCube(cube_colors[0], cube_colors[1], cube_colors[2], 0);
-                // // Cria o nome da posição para identificação
-                // char key[4];
-                // snprintf(key, sizeof(key), "%d%d%d", x, y, z);
+                matrix[x][y][z] = MiniCube(colors[index][0], colors[index][1], colors[index][2], 0);
 
-                // // Realiza a busca no mapa das cores
-                // // Compilador utiliza o auto para deduzir qual a tipagem correta
-                // auto it = colors.find(key);
-                // if (it != colors.end())
-                // {
-                //     // Realiza a operação destructure, criando uma refêrencia dos dados left, right e mid recebidos da iteração do loop
-                //     const auto &[left, right, mid] = it->second;
-                //     // Cria uma instância de MiniCube e insere na matriz
-                //     matrix[x][y][z] = MiniCube(key, left, right, mid, 0);
-                // }
-                // else
-                // {
-                //     cerr << "Chave não encontrada: " << key << endl;
-                // }
+                // char name[4];
+                // snprintf(name, sizeof(name), "%d%d%d", x, y, z);
+                
+                // matrix[x][y][z] = MiniCube(name, colors[index][0], colors[index][1], colors[index][2], 0);
+            
             }
         }
     }
@@ -104,7 +78,18 @@ Cube Cube::cloneMatrix() const {
 }
 
 // Movimentações possíveis (que geram novos estado//novas instâncias do cubo)
-Cube Cube::U() const {
+
+// Observações
+// Foward (FW): sentido horario
+// Backward (BW): sentido anti horario
+
+// x - tras | frente
+// y - esquerda | direita
+// z - cima | baixo
+
+
+// rotate the upper face Fowards
+Cube Cube::U_FW() const {
     Cube newCube = this->cloneMatrix();
 
     MiniCube temp = newCube.matrix[0][0][0];
@@ -116,94 +101,96 @@ Cube Cube::U() const {
     return newCube;
 }
 
-Cube Cube::D() const {
+// rotate the upper face backwards
+Cube Cube::U_BW() const {
     Cube newCube = this->cloneMatrix();
 
-    MiniCube temp = newCube.matrix[0][1][0];
-    newCube.matrix[0][1][0] = newCube.matrix[0][0][0];
-    newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
-    newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
-    newCube.matrix[1][1][0] = temp;
-
-    return newCube;
-}
-
-Cube Cube::R() const {
-    Cube newCube = this->cloneMatrix();
-
-    MiniCube temp = newCube.matrix[0][0][0];
-    newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
-    newCube.matrix[0][0][1] = newCube.matrix[0][1][1];
-    newCube.matrix[0][1][1] = newCube.matrix[0][1][0];
-    newCube.matrix[0][1][0] = temp;
-
-    newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 1) % 3;
-    newCube.matrix[0][0][1].orientation = (newCube.matrix[0][0][1].orientation + 2) % 3;
-    newCube.matrix[0][1][1].orientation = (newCube.matrix[0][1][1].orientation + 1) % 3;
-    newCube.matrix[0][1][0].orientation = (newCube.matrix[0][1][0].orientation + 2) % 3;
-
-    return newCube;
-}
-
-Cube Cube::L() const {
-    Cube newCube = this->cloneMatrix();
-
-    MiniCube temp = newCube.matrix[0][0][0];
+    MiniCube temp = newCube.matrix[1][0][0];
+    newCube.matrix[1][0][0] = newCube.matrix[0][0][0];
     newCube.matrix[0][0][0] = newCube.matrix[0][1][0];
     newCube.matrix[0][1][0] = newCube.matrix[0][1][1];
-    newCube.matrix[0][1][1] = newCube.matrix[0][0][1];
-    newCube.matrix[0][0][1] = temp;
-
-    newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 1) % 3;
-    newCube.matrix[0][1][0].orientation = (newCube.matrix[0][1][0].orientation + 2) % 3;
-    newCube.matrix[0][1][1].orientation = (newCube.matrix[0][1][1].orientation + 1) % 3;
-    newCube.matrix[0][0][1].orientation = (newCube.matrix[0][0][1].orientation + 2) % 3;
-
-    return newCube;
-}
-
-
-Cube Cube::F() const {
-    Cube newCube = this->cloneMatrix();
-
-    MiniCube temp = newCube.matrix[0][0][0];
-    newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
-    newCube.matrix[0][0][1] = newCube.matrix[0][1][1];
-    newCube.matrix[0][1][1] = newCube.matrix[0][1][0];
-    newCube.matrix[0][1][0] = temp;
-
-    return newCube;
-}
-
-Cube Cube::B() const {
-    Cube newCube = this->cloneMatrix();
-
-    MiniCube temp = newCube.matrix[0][0][1];
-    newCube.matrix[0][0][1] = newCube.matrix[1][0][1];
-    newCube.matrix[1][0][1] = newCube.matrix[1][1][1];
-    newCube.matrix[1][1][1] = newCube.matrix[0][1][1];
     newCube.matrix[0][1][1] = temp;
 
     return newCube;
 }
 
-// Cube Cube::shuffle(int movements) const {
-//     vector<function<void()>> functions = {
-//         [this]() { U(); },
-//         [this]() { D(); },
-//         [this]() { R(); },
-//         [this]() { L(); },
-//         [this]() { F(); },
-//         [this]() { B(); },
-//     };
+// rotate the left face forwards
+Cube Cube::L_FW() const {
+    Cube newCube = this->cloneMatrix();
 
-//     int functionIndex = 0;
-//     Cube newCube;
-//     for(int i=0; i<movements; i++) {
-//         functionIndex = rand() % functions.size();
-//         newCube = functions[functionIndex]()
-//     }
-// }
+    MiniCube temp = newCube.matrix[0][0][0];
+    newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
+    newCube.matrix[0][0][1] = newCube.matrix[1][0][1];
+    newCube.matrix[1][0][1] = newCube.matrix[1][0][0];
+    newCube.matrix[1][0][0] = temp;
+
+    newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 1) % 3;
+    newCube.matrix[0][0][1].orientation = (newCube.matrix[0][0][1].orientation + 2) % 3;
+    newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 1) % 3;
+    newCube.matrix[1][0][0].orientation = (newCube.matrix[1][0][0].orientation + 2) % 3;
+
+    return newCube;
+}
+
+// rotate the left face backwards
+Cube Cube::L_BW() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[0][0][0];
+    newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
+    newCube.matrix[1][0][0] = newCube.matrix[1][0][1];
+    newCube.matrix[1][0][1] = newCube.matrix[0][0][1];
+    newCube.matrix[0][0][1] = temp;
+
+    newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 2) % 3;
+    newCube.matrix[1][0][0].orientation = (newCube.matrix[1][0][0].orientation + 1) % 3;
+    newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 2) % 3;
+    newCube.matrix[0][0][1].orientation = (newCube.matrix[0][0][1].orientation + 1) % 3;    
+
+    return newCube;
+}
+
+// x - tras | frente
+// y - esquerda | direita
+// z - cima | baixo
+
+//frente
+Cube Cube::F_FW() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[1][0][0];
+    newCube.matrix[1][0][0] = newCube.matrix[1][0][1];
+    newCube.matrix[1][0][1] = newCube.matrix[1][1][1];
+    newCube.matrix[1][1][1] = newCube.matrix[1][1][0];
+    newCube.matrix[1][1][0] = temp;
+
+    newCube.matrix[1][0][0].orientation = (newCube.matrix[1][0][0].orientation + 2) % 3;
+    newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 1) % 3;
+    newCube.matrix[1][1][1].orientation = (newCube.matrix[1][1][1].orientation + 2) % 3;
+    newCube.matrix[1][1][0].orientation = (newCube.matrix[1][1][0].orientation + 1) % 3;
+
+    return newCube;
+}
+
+
+//frente
+Cube Cube::F_BW() const {
+    Cube newCube = this->cloneMatrix();
+
+    MiniCube temp = newCube.matrix[1][0][0];
+    newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
+    newCube.matrix[1][1][0] = newCube.matrix[1][1][1];
+    newCube.matrix[1][1][1] = newCube.matrix[1][0][1];
+    newCube.matrix[1][0][1] = temp;
+
+    newCube.matrix[1][0][0].orientation = (newCube.matrix[1][0][0].orientation + 1) % 3;
+    newCube.matrix[1][1][0].orientation = (newCube.matrix[1][1][0].orientation + 2) % 3;
+    newCube.matrix[1][1][1].orientation = (newCube.matrix[1][1][1].orientation + 1) % 3;
+    newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 2) % 3;
+
+
+    return newCube;
+}
 
 Cube Cube::shuffle(int movements) const {
     Cube newCube = *this;  // começa com uma cópia do cubo atual
@@ -213,31 +200,35 @@ Cube Cube::shuffle(int movements) const {
         int functionIndex = rand() % functions_possible;
         switch(functionIndex){
             case 0:
-                newCube = newCube.U(); 
+                newCube = newCube.U_FW(); 
                 cout << "Up" << endl;
                 break;
             case 1:
-                newCube = newCube.D(); 
-                cout << "Down" << endl;
+                newCube = newCube.U_BW(); 
+                cout << "Up'" << endl;
                 break;
             case 2:
-                newCube = newCube.R(); 
-                cout << "Right" << endl;
+                newCube = newCube.L_FW(); 
+                cout << "L" << endl;
                 break;
             case 3:
-                newCube = newCube.L(); 
-                cout << "Left" << endl;
+                newCube = newCube.L_BW(); 
+                cout << "L'" << endl;
                 break;
             case 4:
-                newCube = newCube.F(); 
-                cout << "Front" << endl;
+                newCube = newCube.F_FW(); 
+                cout << "F" << endl;
                 break;
             case 5:
-                newCube = newCube.B(); 
-                cout << "Back" << endl;
+                newCube = newCube.F_BW(); 
+                cout << "F'" << endl;
                 break;
         }
     }
 
     return newCube;
+}
+
+MiniCube Cube::position(int x, int y, int z) {
+    return matrix[x][y][z];
 }

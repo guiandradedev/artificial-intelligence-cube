@@ -14,6 +14,7 @@ public:
     MiniCube(int l, int r, int t, short int orientation); 
     // MiniCube(char n[4], int l, int r, int t, short int orientation); 
     MiniCube clone() const;
+    void print();
 };
 
 #endif
