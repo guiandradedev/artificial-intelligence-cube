@@ -192,11 +192,11 @@ Cube Cube::F_BW() const {
     return newCube;
 }
 
-Cube Cube::shuffle(int movements) const {
+Cube Cube::shuffle(int moviments) const {
     Cube newCube = *this;  // começa com uma cópia do cubo atual
     int functions_possible = 6;
 
-    for (int i = 0; i < movements; i++) {
+    for (int i = 0; i < moviments; i++) {
         int functionIndex = rand() % functions_possible;
         switch(functionIndex){
             case 0:
@@ -232,3 +232,13 @@ Cube Cube::shuffle(int movements) const {
 MiniCube Cube::position(int x, int y, int z) {
     return matrix[x][y][z];
 }
+
+// // Move this implementation to Cube.h as a member function, or implement as a non-member function here:
+// bool Cube::operator==(const Cube& other) const {
+//     for (int x = 0; x < 2; ++x)
+//         for (int y = 0; y < 2; ++y)
+//             for (int z = 0; z < 2; ++z)
+//                 if (matrix[x][y][z] != other.matrix[x][y][z])
+//                     return false;
+//     return true;
+// }

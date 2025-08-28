@@ -6,12 +6,12 @@
 #include "MiniCube.h"
 
 class Cube {
-protected:
-    // std::vector<std::vector<std::vector<MiniCube> > > matriz;
-    MiniCube matrix[2][2][2];
+// protected:
+//     // std::vector<std::vector<std::vector<MiniCube> > > matriz;
 
 public:
-    Cube();           
+    Cube();       
+    MiniCube matrix[2][2][2];
     void init();
     void print() const;
     Cube cloneMatrix() const;
@@ -24,7 +24,7 @@ public:
     Cube F_BW() const;
     MiniCube position(int x, int y, int z);
 
-    Cube shuffle(int movements) const;
+    Cube shuffle(int moviments) const;
     
 };
 
