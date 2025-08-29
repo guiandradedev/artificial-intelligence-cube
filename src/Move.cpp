@@ -17,11 +17,11 @@ namespace Move {
     Cube U_BW(const Cube& cube) {
         Cube newCube = cube.cloneMatrix();
 
-        MiniCube temp = newCube.matrix[1][0][0];
-        newCube.matrix[1][0][0] = newCube.matrix[0][0][0];
+        MiniCube temp = newCube.matrix[0][0][0];
         newCube.matrix[0][0][0] = newCube.matrix[0][1][0];
-        newCube.matrix[0][1][0] = newCube.matrix[0][1][1];
-        newCube.matrix[0][1][1] = temp;
+        newCube.matrix[0][1][0] = newCube.matrix[1][1][0];
+        newCube.matrix[1][1][0] = newCube.matrix[1][0][0];
+        newCube.matrix[1][0][0] = temp;
 
         return newCube;
     }

@@ -81,6 +81,7 @@ Cube Cube::cloneMatrix() const {
 const char moviments[6][4] = { "UFW", "UBW", "LFW", "LBW", "FBW", "FFW" };
 
 Cube Cube::applyMove(const char mov[4]) const {
+    cout << mov << endl;
     if (strcmp(mov, "UFW") == 0) return Move::U_FW(*this);
     if (strcmp(mov, "UBW") == 0) return Move::U_BW(*this);
     if (strcmp(mov, "LFW") == 0) return Move::L_FW(*this);
@@ -105,4 +106,19 @@ Cube Cube::shuffle(int moves) const {
 
 MiniCube Cube::position(int x, int y, int z) {
     return matrix[x][y][z];
+}
+
+bool Cube::is_final_state(Cube original) {
+    bool is_valid = true;
+
+    for(int i=0; i<2 && is_valid; i++) {
+        for(int j=0; j<2 && is_valid; j++) {
+            for(int k=0; k<2 && is_valid; k++) {
+                if(matrix[i][j][k] != original.matrix[i][j][k]) {
+                    is_valid = false;
+                }
+            }
+        }
+    }
+    return is_valid;
 }

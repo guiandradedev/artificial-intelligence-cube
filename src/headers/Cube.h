@@ -6,15 +6,16 @@
 #include "MiniCube.h"
 
 class Cube {
-// protected:
-//     // std::vector<std::vector<std::vector<MiniCube> > > matriz;
+protected:
 
 public:
     Cube();       
-    MiniCube matrix[2][2][2];
     void init();
     void print() const;
     Cube cloneMatrix() const;
+    MiniCube matrix[2][2][2];
+
+    bool is_final_state(Cube original);
 
     MiniCube position(int x, int y, int z);
 
