@@ -35,7 +35,10 @@ int main() {
     Cube shuffledCube = cubo.shuffle(1);
     shuffledCube.print();
 
-    Solver::bfs(shuffledCube);
+    Solver solver;
+    solver.final_state.print();
+
+    solver.bfs(shuffledCube);
 
     shuffledCube.print();
 
