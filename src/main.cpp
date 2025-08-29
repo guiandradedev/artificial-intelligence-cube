@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 #include <set>
-
+#include "Move.h"
 // x - tras | frente
 // y - esquerda | direita
 // z - cima | baixo
@@ -15,7 +15,7 @@ bool is_final_state(Cube cube, Cube original) {
     for(int i=0; i<2 && is_valid; i++) {
         for(int j=0; j<2 && is_valid; j++) {
             for(int k=0; k<2 && is_valid; k++) {
-                if(!(cube.matrix[i][j][k] != original.matrix[i][j][k])) {
+                if(cube.matrix[i][j][k] != original.matrix[i][j][k]) {
                     is_valid = false;
                 }
             }
@@ -31,24 +31,23 @@ int main() {
     cubo.print();
     cout << "" << endl;
 
-    cubo.position(0,0,0).print();
-    cubo.position(1,0,0).print();
+    // cubo.position(0,0,0).print();
+    // cubo.position(1,0,0).print();
 
     Cube newCube = cubo.cloneMatrix();
-
-    newCube = newCube.U_BW();
-
-    // cout << "" << endl;
-    // newCube.print();
-    // cout << "" << endl;
-
-    // newCube = newCube.R();
+    newCube = Move::U_BW(newCube);
 
     // cout << "" << endl;
     // newCube.print();
     // cout << "" << endl;
 
-    cubo.print();
+    // // newCube = newCube.R();
+
+    // // cout << "" << endl;
+    // // newCube.print();
+    // // cout << "" << endl;
+
+    // cubo.print();
 
     // Cube shuffledCube = cubo.shuffle(1);
     // shuffledCube.print();
@@ -70,12 +69,12 @@ int main() {
         // visited.insert(state);
 
         i++;
-        cube_queue.push(state.U_FW());
-        cube_queue.push(state.U_BW());
-        cube_queue.push(state.L_FW());
-        cube_queue.push(state.L_BW());
-        cube_queue.push(state.F_FW());
-        cube_queue.push(state.F_BW());
+        cube_queue.push(Move::U_FW(state));
+        cube_queue.push(Move::U_BW(state));
+        cube_queue.push(Move::L_FW(state));
+        cube_queue.push(Move::L_BW(state));
+        cube_queue.push(Move::F_FW(state));
+        cube_queue.push(Move::F_BW(state));
 
     }
 

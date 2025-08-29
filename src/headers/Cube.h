@@ -16,16 +16,10 @@ public:
     void print() const;
     Cube cloneMatrix() const;
 
-    Cube U_FW() const;
-    Cube L_FW() const;
-    Cube F_FW() const;
-    Cube U_BW() const;
-    Cube L_BW() const;
-    Cube F_BW() const;
     MiniCube position(int x, int y, int z);
 
     Cube shuffle(int moviments) const;
-    
+    Cube applyMove(const char mov[4]) const;
 };
 
 #endif
