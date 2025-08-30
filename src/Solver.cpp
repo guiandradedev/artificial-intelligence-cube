@@ -6,6 +6,8 @@
 #include <set>
 #include <iostream>
 #include <unordered_set>
+#include <chrono>
+using namespace std::chrono;
 namespace std {
     template<>
     struct hash<Cube> {
@@ -46,6 +48,7 @@ void Solver::bfs(Cube cube) {
     queue<Cube> cube_queue;
     unordered_set<Cube> visited;
     // set<Cube> visited;
+    auto start = high_resolution_clock::now();
     cube_queue.push(cube);
     int i=0;
     while(!cube_queue.empty()) {
@@ -71,6 +74,8 @@ void Solver::bfs(Cube cube) {
         cube_queue.push(Move::F_BW(state));
 
     }
+        auto end = high_resolution_clock::now();
+    cout << "Tempo BFS: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
 }
 
 void Solver::dfs(Cube cube) {
@@ -79,6 +84,7 @@ void Solver::dfs(Cube cube) {
     unordered_set<Cube> visited;
     cube_stack.push(cube);
     int i=0;
+    auto start = high_resolution_clock::now();
     while(!cube_stack.empty()) {
         Cube state = cube_stack.top();
         cube_stack.pop();
@@ -106,4 +112,6 @@ void Solver::dfs(Cube cube) {
         cube_stack.push(Move::F_BW(state));
 
     }
+    auto end = high_resolution_clock::now();
+    cout << "Tempo DFS: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
 }
