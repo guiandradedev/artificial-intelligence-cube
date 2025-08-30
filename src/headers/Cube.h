@@ -15,12 +15,24 @@ public:
     Cube cloneMatrix() const;
     MiniCube matrix[2][2][2];
 
-    bool is_final_state(Cube original);
-
     MiniCube position(int x, int y, int z);
 
     Cube shuffle(int moviments) const;
     Cube applyMove(const char mov[4]) const;
+
+    bool operator==(const Cube& other) const {
+        for (int x = 0; x < 2; ++x) {
+            for (int y = 0; y < 2; ++y) {
+                for (int z = 0; z < 2; ++z) {
+                    if (matrix[x][y][z] != other.matrix[x][y][z]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 };
 
 #endif

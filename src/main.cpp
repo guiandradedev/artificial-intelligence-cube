@@ -32,7 +32,7 @@ int main() {
 
     // cubo.print();
 
-    Cube shuffledCube = cubo.shuffle(1);
+    Cube shuffledCube = cubo.shuffle(10);
     shuffledCube.print();
 
     Solver solver;
