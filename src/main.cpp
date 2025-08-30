@@ -39,9 +39,7 @@ int main() {
     solver.final_state.print();
 
     solver.bfs(shuffledCube);
+    solver.dfs(shuffledCube);
 
-    shuffledCube.print();
-
- 
     return 0;
 }

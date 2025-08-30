@@ -18,5 +18,6 @@ public:
     Cube final_state;
 
     void bfs(Cube cube);
+    void dfs(Cube cube);
 
 };
