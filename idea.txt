@@ -1,0 +1,5 @@
+ideia de mapeamento do cubo (mapa de processamento)
+    -> ao inves de armazenar o caminho inteiro, armazenar o estado e movimento que levaram ate o estado atual, quase uma arvore
+    -> um pair com o estado pai e o movimento
+
+quando a busca encontrar o melhor caminho, fazer um "map" com o caminho de volta 
