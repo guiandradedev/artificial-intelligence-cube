@@ -15,6 +15,11 @@ protected:
 
 public:
     Solver();       
+    struct Node {
+        Cube cube;
+        Node* root;
+        char mov[4];
+    };
     Cube final_state;
 
     void bfs(Cube cube);

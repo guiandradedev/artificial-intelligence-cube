@@ -17,6 +17,8 @@ public:
 
     MiniCube position(int x, int y, int z);
 
+    char moviments[6][4] = { "UFW", "UBW", "LFW", "LBW", "FBW", "FFW" };
+
     Cube shuffle(int moviments) const;
     Cube applyMove(const char mov[4]) const;
 

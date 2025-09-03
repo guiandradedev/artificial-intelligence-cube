@@ -22,8 +22,15 @@ void Cube::init()
         {5, 3, 0},
         {5, 3, 1}
     };
+    // 0 amarelo
+    // 1 branco
+    // 2 azul
+    // 3 verde
+    // 4 laranja
+    // 5 vermelho
 
     // Loop que insere as cores na matriz
+    int index = 1;
     for (int x = 0; x < 2; ++x)
     {
         for (int y = 0; y < 2; ++y)
@@ -31,7 +38,7 @@ void Cube::init()
             for (int z = 0; z < 2; ++z)
             {
                 int index = x * 4 + y * 2 + z;
-                matrix[x][y][z] = MiniCube(colors[index][0], colors[index][1], colors[index][2], 0);
+                matrix[x][y][z] = MiniCube(colors[index][0], colors[index][1], colors[index][2], 0, index);
 
                 // char name[4];
                 // snprintf(name, sizeof(name), "%d%d%d", x, y, z);
@@ -52,8 +59,10 @@ void Cube::print() const
             for (int z = 0; z < 2; ++z)
             {
                 const MiniCube &cube = matrix[x][y][z];
-                std::cout << x << " " << y << " " << z << " "
+                std::cout 
                         //   << cube.name << " "
+                          << "Cubinho" << cube.index << " (" 
+                          << x << " " << y << " " << z << ") "
                           << cube.left << " "
                           << cube.right << " "
                           << cube.mid << " "
@@ -78,10 +87,8 @@ Cube Cube::cloneMatrix() const {
     return newCube;
 }
 
-const char moviments[6][4] = { "UFW", "UBW", "LFW", "LBW", "FBW", "FFW" };
-
 Cube Cube::applyMove(const char mov[4]) const {
-    cout << mov << endl;
+    // cout << mov << endl;
     if (strcmp(mov, "UFW") == 0) return Move::U_FW(*this);
     if (strcmp(mov, "UBW") == 0) return Move::U_BW(*this);
     if (strcmp(mov, "LFW") == 0) return Move::L_FW(*this);

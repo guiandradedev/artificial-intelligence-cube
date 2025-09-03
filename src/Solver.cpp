@@ -45,37 +45,54 @@ Solver::Solver() {
 // }
 
 void Solver::bfs(Cube cube) {
-    queue<Cube> cube_queue;
+    queue<Node*> cube_queue;
     unordered_set<Cube> visited;
-    // set<Cube> visited;
     auto start = high_resolution_clock::now();
-    cube_queue.push(cube);
     int i=0;
+
+    Node* root = new Node{cube, nullptr, ""}; 
+    Node* final_move;
+    cube_queue.push(root);
+    visited.insert(root->cube);
+    
     while(!cube_queue.empty()) {
-        Cube state = cube_queue.front();
+        Node* state = cube_queue.front();
         cube_queue.pop();
 
-        if (visited.count(state) > 0) continue;
-        visited.insert(state);
-
-        if(state == final_state) {
-            cout << "Funcionou na " << i << " iteração" << endl;
+        if(state->cube == final_state) {
+            final_state.print();
+            cout << "Solucao encontrada na " << i << " iteracao!" << endl;
+            final_move = state;
             break;
         }
 
-        // visited.insert(state);
-
+        for(const auto& moviment : cube.moviments) {
+            Cube next_cube = state->cube.applyMove(moviment);
+            
+            if (visited.count(next_cube) == 0) {
+                visited.insert(next_cube);
+                
+                Node* next_node = new Node{next_cube, state, {}}; 
+                strcpy(next_node->mov, moviment);
+                
+                cube_queue.push(next_node);
+            }
+        }
         i++;
-        cube_queue.push(Move::U_FW(state));
-        cube_queue.push(Move::U_BW(state));
-        cube_queue.push(Move::L_FW(state));
-        cube_queue.push(Move::L_BW(state));
-        cube_queue.push(Move::F_FW(state));
-        cube_queue.push(Move::F_BW(state));
-
     }
-        auto end = high_resolution_clock::now();
+    auto end = high_resolution_clock::now();
     cout << "Tempo BFS: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
+
+    cout << "Reconstrucao do cubo:" << endl;
+    int moves = 0;
+    final_move->cube.print();
+    while(final_move->root != nullptr) {
+        cout << final_move->mov << endl;
+        final_move = final_move->root;
+        moves++;
+    }
+    cout << final_move->mov << endl;
+    cout << "Com um total de " << moves << " movimentos." << endl;
 }
 
 void Solver::dfs(Cube cube) {
@@ -96,12 +113,6 @@ void Solver::dfs(Cube cube) {
             cout << "Funcionou na " << i << " iteração" << endl;
             break;
         }
-
-        // if(i % 1000 == 0) {
-        //     cout << i << endl;
-        // }
-
-        // visited.insert(state);
 
         i++;
         cube_stack.push(Move::U_FW(state));
