@@ -7,6 +7,28 @@
 
 using namespace std;
 
+enum PositionFace {
+    LEFT = 0,
+    RIGHT = 1,
+    MID = 2
+};
+
+
+// faceIndex: 0 = left, 1 = right, 2 = mid
+int getFaceColor(const MiniCube& c, PositionFace face) {
+    // converte o enum para int para calcular o índice rotacionado
+    int faceIndex = static_cast<int>(face);
+    int rotatedIndex = (faceIndex + c.orientation) % 3;
+
+    switch (rotatedIndex) {
+        case 0: return c.left;
+        case 1: return c.right;
+        case 2: return c.mid;
+    }
+    return -1; // fallback
+}
+
+
 void print(Cube cube) {
 int planner[8][6];
         // int x=0,y=0,z=0;
@@ -17,39 +39,39 @@ int planner[8][6];
     }
 
     // back
-    planner[0][2] = cube.matrix[0][0][1].left;
-    planner[0][3] = cube.matrix[0][1][1].right;
-    planner[1][2] = cube.matrix[0][0][0].left;
-    planner[1][3] = cube.matrix[0][1][0].right;
+    planner[0][2] = getFaceColor(cube.matrix[0][0][1], PositionFace::LEFT);
+    planner[0][3] = getFaceColor(cube.matrix[0][1][1], PositionFace::RIGHT);
+    planner[1][2] = getFaceColor(cube.matrix[0][0][0], PositionFace::LEFT);
+    planner[1][3] = getFaceColor(cube.matrix[0][1][0], PositionFace::RIGHT);
     
     // Top
-    planner[2][2] = cube.matrix[0][0][0].mid;
-    planner[2][3] = cube.matrix[0][1][0].mid;
-    planner[3][2] = cube.matrix[1][0][0].mid;
-    planner[3][3] = cube.matrix[1][1][0].mid;
+    planner[2][2] = getFaceColor(cube.matrix[0][0][0], PositionFace::MID);
+    planner[2][3] = getFaceColor(cube.matrix[0][1][0], PositionFace::MID);
+    planner[3][2] = getFaceColor(cube.matrix[1][0][0], PositionFace::MID);
+    planner[3][3] = getFaceColor(cube.matrix[1][1][0], PositionFace::MID);
 
     // FRONT
-    planner[4][2] = cube.matrix[1][0][0].right;
-    planner[4][3] = cube.matrix[1][1][0].left;
-    planner[5][2] = cube.matrix[1][0][1].right;
-    planner[5][3] = cube.matrix[1][1][1].left;
+    planner[4][2] = getFaceColor(cube.matrix[1][0][0], PositionFace::RIGHT);
+    planner[4][3] = getFaceColor(cube.matrix[1][1][0], PositionFace::LEFT);
+    planner[5][2] = getFaceColor(cube.matrix[1][0][1], PositionFace::RIGHT);
+    planner[5][3] = getFaceColor(cube.matrix[1][1][1], PositionFace::LEFT);
     
     // DOWN
-    planner[6][2] = cube.matrix[1][0][1].mid;
-    planner[6][3] = cube.matrix[1][1][1].mid;
-    planner[7][2] = cube.matrix[0][0][1].mid;
-    planner[7][3] = cube.matrix[0][1][1].mid;
+    planner[6][2] = getFaceColor(cube.matrix[1][0][1], PositionFace::MID);
+    planner[6][3] = getFaceColor(cube.matrix[1][1][1], PositionFace::MID);
+    planner[7][2] = getFaceColor(cube.matrix[0][0][1], PositionFace::MID);
+    planner[7][3] = getFaceColor(cube.matrix[0][1][1], PositionFace::MID);
     
     // Left
-    planner[2][0] = cube.matrix[0][0][1].right;
-    planner[2][1] = cube.matrix[0][0][0].right;
-    planner[3][0] = cube.matrix[1][0][1].left;
-    planner[3][1] = cube.matrix[1][0][0].left;
+    planner[2][0] = getFaceColor(cube.matrix[0][0][1], PositionFace::RIGHT);
+    planner[2][1] = getFaceColor(cube.matrix[0][0][0], PositionFace::RIGHT);
+    planner[3][0] = getFaceColor(cube.matrix[1][0][1], PositionFace::LEFT);
+    planner[3][1] = getFaceColor(cube.matrix[1][0][0], PositionFace::LEFT);
     
-    planner[2][4] = cube.matrix[0][1][0].left;
-    planner[2][5] = cube.matrix[0][1][1].left;
-    planner[3][4] = cube.matrix[1][1][0].right;
-    planner[3][5] = cube.matrix[1][1][1].right;
+    planner[2][4] = getFaceColor(cube.matrix[0][1][0], PositionFace::LEFT);
+    planner[2][5] = getFaceColor(cube.matrix[0][1][1], PositionFace::LEFT);
+    planner[3][4] = getFaceColor(cube.matrix[1][1][0], PositionFace::RIGHT);
+    planner[3][5] = getFaceColor(cube.matrix[1][1][1], PositionFace::RIGHT);
 
     char colorMap[] = {'Y', 'W', 'B', 'G', 'O', 'R'}; 
 
@@ -64,6 +86,7 @@ int planner[8][6];
         cout << endl;
     }
 }
+
 
 int main() {
     srand(time(NULL));

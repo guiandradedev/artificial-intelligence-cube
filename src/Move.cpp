@@ -2,6 +2,10 @@
 
 namespace Move {
 
+    // x - tras | frente
+    // y - esquerda | direita
+    // z - cima | baixo
+
     Cube U_FW(const Cube& cube) {
         Cube newCube = cube.cloneMatrix();
 
