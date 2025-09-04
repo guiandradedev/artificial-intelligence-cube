@@ -142,7 +142,7 @@ vector<const char*> reconstruct_path(
 void Solver::bfs(Cube initial_state){
     queue<Cube> cube_queue;
     unordered_set<Cube> visited;
-    unordered_map<Cube, pair<Cube, const char*>> came_from;\
+    unordered_map<Cube, pair<Cube, const char*>> came_from;
 
 
     auto start = high_resolution_clock::now();
