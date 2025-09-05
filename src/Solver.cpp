@@ -68,6 +68,9 @@ void Solver::bfs(Cube cube) {
         }
 
         for(const auto& moviment : cube.moviments) {
+            // Se for inverso do anterior, pula pro proximo
+            if(strcmp(Move::reverse_moves(moviment), state->mov) == 0) continue;
+
             Cube next_cube = state->cube.applyMove(moviment);
             
             if (visited.count(next_cube) == 0) {

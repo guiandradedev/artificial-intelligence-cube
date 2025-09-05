@@ -88,7 +88,7 @@ Cube Cube::cloneMatrix() const {
 }
 
 Cube Cube::applyMove(const char mov[4]) const {
-    // cout << mov << endl;
+    // TODO Adicionar hash
     if (strcmp(mov, "UFW") == 0) return Move::U_FW(*this);
     if (strcmp(mov, "UBW") == 0) return Move::U_BW(*this);
     if (strcmp(mov, "LFW") == 0) return Move::L_FW(*this);

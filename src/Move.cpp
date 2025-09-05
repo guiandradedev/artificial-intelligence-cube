@@ -1,4 +1,6 @@
 #include "Move.h"
+#include <unordered_map>
+#include <cstring>
 
 namespace Move {
 
@@ -94,5 +96,24 @@ namespace Move {
         newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 1) % 3; 
 
         return newCube;
+    }
+
+    const char* reverse_moves(const char* key) {
+        // TODO Adicionar hash
+        if (strcmp(key, "UFW") == 0) {
+            return "UBW";
+        } else if (strcmp(key, "UBW") == 0) {
+            return "UFW";
+        } else if (strcmp(key, "LFW") == 0) {
+            return "LBW";
+        } else if (strcmp(key, "LBW") == 0) {
+            return "LFW";
+        } else if (strcmp(key, "FBW") == 0) {
+            return "FFW";
+        } else if (strcmp(key, "FFW") == 0) {
+            return "FBW";
+        } else {
+            return nullptr;
+        }
     }
 }
