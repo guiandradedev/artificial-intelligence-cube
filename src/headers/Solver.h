@@ -3,15 +3,11 @@
 #include "Cube.h"
 #include <functional>
 
-// namespace Solver {
-//     extern Cube final_state;
-
-//     void bfs(Cube cube);
-// }
+class DataStructure; // Declaracao antecipada
 
 class Solver {
 protected:
-    // void algorithm(Cube cube, function<Cube()> getNext, );
+    void algorithm(Cube cube, DataStructure& structure);
 
 public:
     Solver();       
@@ -24,5 +20,4 @@ public:
 
     void bfs(Cube cube);
     void dfs(Cube cube);
-
 };

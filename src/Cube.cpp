@@ -99,14 +99,21 @@ Cube Cube::applyMove(const char mov[4]) const {
     return *this;
 }
 
-Cube Cube::shuffle(int moves) const {
+Cube Cube::shuffle(int moves, bool print) const {
     Cube newCube = *this;
     int functions_possible = 6;
 
+    if(print) {
+        cout << "Movimentos: " << endl;
+    }
     for (int i = 0; i < moves; i++) {
         int functionIndex = rand() % functions_possible;
         newCube = newCube.applyMove(moviments[functionIndex]);
+        if(print) {
+            cout << moviments[functionIndex] << " - ";
+        }
     }
+    cout << endl;
 
     return newCube;
 }

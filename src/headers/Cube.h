@@ -19,7 +19,7 @@ public:
 
     char moviments[6][4] = { "UFW", "UBW", "LFW", "LBW", "FBW", "FFW" };
 
-    Cube shuffle(int moviments) const;
+    Cube shuffle(int moviments, bool print) const;
     Cube applyMove(const char mov[4]) const;
 
     bool operator==(const Cube& other) const {

@@ -100,93 +100,13 @@ int main() {
     cubo.print();
     cout << "" << endl;
 
-    // print(cubo);
-    
-
-    // // cubo.position(0,0,0).print();
-    // // cubo.position(1,0,0).print();
-
-    // Cube newCube = cubo.cloneMatrix();
-    // // newCube = Move::U_BW(newCube);
-
-    // // cout << "" << endl;
-    // // newCube.print();
-    // // cout << "" << endl;
-
-    // // // newCube = newCube.R();
-
-    // // // cout << "" << endl;
-    // // // newCube.print();
-    // // // cout << "" << endl;
-
-    // // cubo.print();
-
-    // // Cube shuffledCube = cubo.shuffle(10);
-
-    cout << "Movimento 1:" <<endl;
-    // Cube shuffledCube = cubo.cloneMatrix();
-    // shuffledCube = Move::F_BW(shuffledCube);
-    // shuffledCube.print();
-    // // print(shuffledCube);
-
-    // cout << "LFW" << endl;
-
-    // Cube LFW = Move::F_FW(cubo);
-    // LFW.print();
-    // print(LFW);
-    // LBW.print();
-    // cout << "FFW" << endl;
-    
-    Cube LBW = Move::U_FW(cubo);
-    LBW = Move::U_BW(LBW);
-    LBW = Move::F_BW(LBW);
-    LBW = Move::L_BW(LBW);
-    LBW = Move::F_FW(LBW);
-    LBW = Move::F_FW(LBW);
-    LBW = Move::L_FW(LBW);
-    LBW = Move::U_BW(LBW);
-    LBW = Move::L_BW(LBW);
-
-    cout << "Shuffle" << endl;
-    LBW.print();
-    cout << endl;
-
-    // print(LBW);
-
-    // Cube FFW = Move::F_FW(LBW);
-    // print(FFW);
-    // FFW.print();
-
-    // cout << "UFW" << endl;
-    // Cube UFW = Move::U_BW(FFW);
-    // print(UFW);
-    // UFW.print();
-
-    // print(cubo);
-
-
-    // cout << endl;
-    // shuffledCube = Move::L_BW(shuffledCube);
-    // shuffledCube.print();
-    // cout << endl;
-    // shuffledCube = Move::U_FW(shuffledCube);
-    // shuffledCube.print();
-    // cout << endl;
-    // shuffledCube = Move::F_BW(shuffledCube);
-    // shuffledCube.print();
-    // cout << endl;
-    // shuffledCube = Move::BshuffledCube);
-    // shuffledCube.print();
-    // cout << endl;
-    // shuffledCube = Move::U_FW(shuffledCube);
-    // shuffledCube.print();
-    // cout << endl;
+    Cube shuffledCube = cubo.shuffle(10, true);
 
     Solver solver;
     
-    solver.bfs(LBW);
+    solver.bfs(shuffledCube);
     // solver.final_state.print();
-    // solver.dfs(shuffledCube);
+    solver.dfs(shuffledCube);
 
     return 0;
 }

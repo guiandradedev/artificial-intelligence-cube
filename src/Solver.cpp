@@ -8,6 +8,10 @@
 #include <unordered_set>
 #include <chrono>
 #include <cstring>
+#include "DataStructure.h"
+#include "Queue.h"
+#include "Stack.h"
+
 using namespace std::chrono;
 namespace std {
     template<>
@@ -41,27 +45,20 @@ Solver::Solver() {
     final_state.init();
 }
 
-// void algorithm(Data& data) {
-
-// }
-
-void Solver::bfs(Cube cube) {
-    queue<Node*> cube_queue;
+void Solver::algorithm(Cube cube, DataStructure& structure) {
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
     int i=0;
 
     Node* root = new Node{cube, nullptr, ""}; 
     Node* final_move;
-    cube_queue.push(root);
+    structure.insert(root);
     visited.insert(root->cube);
     
-    while(!cube_queue.empty()) {
-        Node* state = cube_queue.front();
-        cube_queue.pop();
+    while(!structure.isEmpty()) {
+        Node* state = structure.remove();
 
         if(state->cube == final_state) {
-            final_state.print();
             cout << "Solucao encontrada na " << i << " iteracao!" << endl;
             final_move = state;
             break;
@@ -79,7 +76,7 @@ void Solver::bfs(Cube cube) {
                 Node* next_node = new Node{next_cube, state, {}}; 
                 strcpy(next_node->mov, moviment);
                 
-                cube_queue.push(next_node);
+                structure.insert(next_node);
             }
         }
         i++;
@@ -89,7 +86,6 @@ void Solver::bfs(Cube cube) {
 
     cout << "Reconstrucao do cubo:" << endl;
     int moves = 0;
-    final_move->cube.print();
     while(final_move->root != nullptr) {
         cout << final_move->mov << endl;
         final_move = final_move->root;
@@ -99,34 +95,14 @@ void Solver::bfs(Cube cube) {
     cout << "Com um total de " << moves << " movimentos." << endl;
 }
 
+void Solver::bfs(Cube cube) {
+    Queue queue_structure;
+    cout << "Iniciando BFS..." << endl;
+    algorithm(cube, queue_structure);
+}
+
 void Solver::dfs(Cube cube) {
-    stack<Cube> cube_stack;
-    // set<Cube> visited;
-    unordered_set<Cube> visited;
-    cube_stack.push(cube);
-    int i=0;
-    auto start = high_resolution_clock::now();
-    while(!cube_stack.empty()) {
-        Cube state = cube_stack.top();
-        cube_stack.pop();
-
-        if (visited.count(state) > 0) continue;
-        visited.insert(state);
-
-        if(state == final_state) {
-            cout << "Funcionou na " << i << " iteração" << endl;
-            break;
-        }
-
-        i++;
-        cube_stack.push(Move::U_FW(state));
-        cube_stack.push(Move::U_BW(state));
-        cube_stack.push(Move::L_FW(state));
-        cube_stack.push(Move::L_BW(state));
-        cube_stack.push(Move::F_FW(state));
-        cube_stack.push(Move::F_BW(state));
-
-    }
-    auto end = high_resolution_clock::now();
-    cout << "Tempo DFS: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
+    Stack stack_structure;
+    cout << "Iniciando DFS..." << endl;
+    algorithm(cube, stack_structure);
 }
