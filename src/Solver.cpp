@@ -7,6 +7,7 @@
 #include <iostream>
 #include <unordered_set>
 #include <chrono>
+#include <cstring>
 using namespace std::chrono;
 namespace std {
     template<>

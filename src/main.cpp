@@ -91,6 +91,8 @@ int planner[8][6];
 }
 
 
+/// @brief 
+/// @return 
 int main() {
     srand(time(NULL));
     Cube cubo;
@@ -123,25 +125,44 @@ int main() {
 
     cout << "Movimento 1:" <<endl;
     // Cube shuffledCube = cubo.cloneMatrix();
-    // shuffledCube = Move::L_BW(shuffledCube);
+    // shuffledCube = Move::F_BW(shuffledCube);
     // shuffledCube.print();
-    // print(shuffledCube);
+    // // print(shuffledCube);
 
-    cout << "LFW" << endl;
+    // cout << "LFW" << endl;
 
-    Cube LFW = Move::L_BW(cubo);
+    // Cube LFW = Move::F_FW(cubo);
+    // LFW.print();
     // print(LFW);
-    LFW.print();
+    // LBW.print();
+    // cout << "FFW" << endl;
+    
+    Cube LBW = Move::U_FW(cubo);
+    LBW = Move::U_BW(LBW);
+    LBW = Move::F_BW(LBW);
+    LBW = Move::L_BW(LBW);
+    LBW = Move::F_FW(LBW);
+    LBW = Move::F_FW(LBW);
+    LBW = Move::L_FW(LBW);
+    LBW = Move::U_BW(LBW);
+    LBW = Move::L_BW(LBW);
 
-    cout << "FFW" << endl;
-    Cube FFW = Move::F_FW(LFW);
+    cout << "Shuffle" << endl;
+    LBW.print();
+    cout << endl;
+
+    // print(LBW);
+
+    // Cube FFW = Move::F_FW(LBW);
     // print(FFW);
-    FFW.print();
+    // FFW.print();
 
     // cout << "UFW" << endl;
     // Cube UFW = Move::U_BW(FFW);
     // print(UFW);
     // UFW.print();
+
+    // print(cubo);
 
 
     // cout << endl;
@@ -161,11 +182,11 @@ int main() {
     // shuffledCube.print();
     // cout << endl;
 
-    // Solver solver;
-    // // solver.final_state.print();
-
-    // solver.bfs(shuffledCube);
-    // // solver.dfs(shuffledCube);
+    Solver solver;
+    
+    solver.bfs(LBW);
+    // solver.final_state.print();
+    // solver.dfs(shuffledCube);
 
     return 0;
 }

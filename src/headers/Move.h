@@ -23,4 +23,6 @@ namespace Move {
     Cube L_BW(const Cube& cube);  // L (Left) sentido anti-horário
     Cube F_BW(const Cube& cube);  // F (Front) sentido anti-horário
 
+    // bool reverse_moves(const char*);
+
 }
