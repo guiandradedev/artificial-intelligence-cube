@@ -18,6 +18,9 @@ enum PositionFace {
 int getFaceColor(const MiniCube& c, PositionFace face) {
     // converte o enum para int para calcular o índice rotacionado
     int faceIndex = static_cast<int>(face);
+
+    // if(c.orientation )
+
     int rotatedIndex = (faceIndex + c.orientation) % 3;
 
     switch (rotatedIndex) {
@@ -95,7 +98,7 @@ int main() {
     cubo.print();
     cout << "" << endl;
 
-    print(cubo);
+    // print(cubo);
     
 
     // // cubo.position(0,0,0).print();
@@ -119,13 +122,28 @@ int main() {
     // // Cube shuffledCube = cubo.shuffle(10);
 
     cout << "Movimento 1:" <<endl;
-    Cube shuffledCube = cubo.cloneMatrix();
-    shuffledCube = Move::L_BW(shuffledCube);
-    shuffledCube.print();
-    print(shuffledCube);
+    // Cube shuffledCube = cubo.cloneMatrix();
+    // shuffledCube = Move::L_BW(shuffledCube);
+    // shuffledCube.print();
+    // print(shuffledCube);
 
-    cout << "UBW" << endl;
-    print(Move::L_FW(cubo));
+    cout << "LFW" << endl;
+
+    Cube LFW = Move::L_BW(cubo);
+    // print(LFW);
+    LFW.print();
+
+    cout << "FFW" << endl;
+    Cube FFW = Move::F_FW(LFW);
+    // print(FFW);
+    FFW.print();
+
+    // cout << "UFW" << endl;
+    // Cube UFW = Move::U_BW(FFW);
+    // print(UFW);
+    // UFW.print();
+
+
     // cout << endl;
     // shuffledCube = Move::L_BW(shuffledCube);
     // shuffledCube.print();
@@ -136,7 +154,7 @@ int main() {
     // shuffledCube = Move::F_BW(shuffledCube);
     // shuffledCube.print();
     // cout << endl;
-    // shuffledCube = Move::L_FW(shuffledCube);
+    // shuffledCube = Move::BshuffledCube);
     // shuffledCube.print();
     // cout << endl;
     // shuffledCube = Move::U_FW(shuffledCube);
