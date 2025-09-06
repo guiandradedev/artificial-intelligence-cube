@@ -103,10 +103,13 @@ int main() {
     Cube shuffledCube = cubo.shuffle(10, true);
 
     Solver solver;
+
+    std::cout << "teste" << Move::isInverse(1, 1) << endl;
+
     
     solver.bfs(shuffledCube);
     // solver.final_state.print();
-    solver.dfs(shuffledCube);
+    // solver.dfs(shuffledCube);
 
     return 0;
 }

@@ -50,7 +50,7 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
     auto start = high_resolution_clock::now();
     int i=0;
 
-    Node* root = new Node{cube, nullptr, ""}; 
+    Node* root = new Node{cube, nullptr, {}}; 
     Node* final_move;
     structure.insert(root);
     visited.insert(root->cube);
@@ -65,16 +65,19 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
         }
 
         for(const auto& moviment : cube.moviments) {
+            // if(strcmp(Move::reverse_moves(moviment), state->mov) == 0) continue;
+            
+            // std::cout << "Movimento: " << moviment << " na iteracao " << i << endl;
+            
             // Se for inverso do anterior, pula pro proximo
-            if(strcmp(Move::reverse_moves(moviment), state->mov) == 0) continue;
+            if(Move::isInverse(moviment, state->mov)) continue;
 
             Cube next_cube = state->cube.applyMove(moviment);
             
             if (visited.count(next_cube) == 0) {
                 visited.insert(next_cube);
                 
-                Node* next_node = new Node{next_cube, state, {}}; 
-                strcpy(next_node->mov, moviment);
+                Node* next_node = new Node{next_cube, state, moviment};
                 
                 structure.insert(next_node);
             }
@@ -93,6 +96,20 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
     }
     cout << final_move->mov << endl;
     cout << "Com um total de " << moves << " movimentos." << endl;
+}
+
+void reconstruct_path(Solver::Node* root) {
+
+    vector<char*> path;
+    
+    int moves = 0;
+    while (root != nullptr)
+    {
+        root = root->root;
+        moves++;
+    }
+    
+
 }
 
 void Solver::bfs(Cube cube) {

@@ -116,4 +116,9 @@ namespace Move {
             return nullptr;
         }
     }
+
+    const bool isInverse(short int move1, short int move2) {
+        // Verifica se move1 e move2 são inversos
+        return (move1 ^ 1) == (move2);
+    }
 }

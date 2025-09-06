@@ -87,14 +87,30 @@ Cube Cube::cloneMatrix() const {
     return newCube;
 }
 
-Cube Cube::applyMove(const char mov[4]) const {
+// Cube Cube::applyMove(const char mov[4]) const {
+//     // TODO Adicionar hash
+//     if (strcmp(mov, "UFW") == 0) return Move::U_FW(*this);
+//     if (strcmp(mov, "UBW") == 0) return Move::U_BW(*this);
+//     if (strcmp(mov, "LFW") == 0) return Move::L_FW(*this);
+//     if (strcmp(mov, "LBW") == 0) return Move::L_BW(*this);
+//     if (strcmp(mov, "FBW") == 0) return Move::F_BW(*this);
+//     if (strcmp(mov, "FFW") == 0) return Move::F_FW(*this);
+
+//     return *this;
+// }
+
+//     UFW = 0, UBW = 1,
+//     LFW = 2, LBW = 3,
+//     FFW = 4, FBW = 5
+
+Cube Cube::applyMove(short int mov) const {
     // TODO Adicionar hash
-    if (strcmp(mov, "UFW") == 0) return Move::U_FW(*this);
-    if (strcmp(mov, "UBW") == 0) return Move::U_BW(*this);
-    if (strcmp(mov, "LFW") == 0) return Move::L_FW(*this);
-    if (strcmp(mov, "LBW") == 0) return Move::L_BW(*this);
-    if (strcmp(mov, "FBW") == 0) return Move::F_BW(*this);
-    if (strcmp(mov, "FFW") == 0) return Move::F_FW(*this);
+    if (mov == 0) return Move::U_FW(*this);
+    if (mov == 1) return Move::U_BW(*this);
+    if (mov == 2) return Move::L_FW(*this);
+    if (mov == 3) return Move::L_BW(*this);
+    if (mov == 4) return Move::F_FW(*this); // Correto
+    if (mov == 5) return Move::F_BW(*this); // Correto
 
     return *this;
 }

@@ -14,7 +14,7 @@ public:
     struct Node {
         Cube cube;
         Node* root;
-        char mov[4];
+        short int mov; // Movimento que gerou esse estado
     };
     Cube final_state;
 
