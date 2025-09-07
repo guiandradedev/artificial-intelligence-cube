@@ -3,8 +3,10 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <functional>
 #include "Move.h"
 #include <cstring>
+#include <Solver.h>
 using namespace std;
 
 Cube::Cube() {}
@@ -103,16 +105,25 @@ Cube Cube::cloneMatrix() const {
 //     LFW = 2, LBW = 3,
 //     FFW = 4, FBW = 5
 
-Cube Cube::applyMove(short int mov) const {
-    // TODO Adicionar hash
-    if (mov == 0) return Move::U_FW(*this);
-    if (mov == 1) return Move::U_BW(*this);
-    if (mov == 2) return Move::L_FW(*this);
-    if (mov == 3) return Move::L_BW(*this);
-    if (mov == 4) return Move::F_FW(*this); // Correto
-    if (mov == 5) return Move::F_BW(*this); // Correto
+static const std::vector<std::function<Cube(const Cube&)>> movefunctios = {
+    Move::U_FW, // 0
+    Move::U_BW, // 1
+    Move::L_FW, // 2
+    Move::L_BW, // 3
+    Move::F_FW, // 4
+    Move::F_BW  // 5
+}; 
 
-    return *this;
+Cube Cube::applyMove(short int mov) const {
+    // // TODO Adicionar hash
+    // if (mov == 0) return Move::U_FW(*this);
+    // if (mov == 1) return Move::U_BW(*this);
+    // if (mov == 2) return Move::L_FW(*this);
+    // if (mov == 3) return Move::L_BW(*this);
+    // if (mov == 4) return Move::F_FW(*this);
+    // if (mov == 5) return Move::F_BW(*this);
+
+    return movefunctios[mov](*this);
 }
 
 Cube Cube::shuffle(int moves, bool print) const {
@@ -122,11 +133,22 @@ Cube Cube::shuffle(int moves, bool print) const {
     if(print) {
         cout << "Movimentos: " << endl;
     }
+    short int last_move = -1;
+
     for (int i = 0; i < moves; i++) {
         int functionIndex = rand() % functions_possible;
+
+        if(Move::isInverse(functionIndex, last_move)){
+            std::cout << "pulei" << std::endl;
+            i--;
+            continue;
+        }
+        last_move = functionIndex;
+
         newCube = newCube.applyMove(moviments[functionIndex]);
+
         if(print) {
-            cout << moviments[functionIndex] << " - ";
+            cout << Solver::moviments_name[functionIndex] << " - ";
         }
     }
     cout << endl;

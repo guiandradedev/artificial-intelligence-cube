@@ -100,16 +100,30 @@ int main() {
     cubo.print();
     cout << "" << endl;
 
-    Cube shuffledCube = cubo.shuffle(10, true);
+    cubo = cubo.shuffle(15, true);
+
+    // cubo = Move::U_FW(cubo);
+    // cubo = Move::L_FW(cubo);
+    // cubo = Move::F_FW(cubo);
+    // cubo = Move::U_BW(cubo);
+    // cubo = Move::L_BW(cubo);
+    // cubo = Move::F_BW(cubo);
+    // cubo = Move::F_BW(cubo);
+    // cubo = Move::F_BW(cubo);
+    // cubo = Move::L_BW(cubo);
+    // cubo = Move::L_BW(cubo);
+    // cubo = Move::U_FW(cubo);
+
+
 
     Solver solver;
 
-    std::cout << "teste" << Move::isInverse(1, 1) << endl;
+    // std::cout << "teste" << Move::isInverse(1, 1) << endl;
 
     
-    solver.bfs(shuffledCube);
+    solver.bfs(cubo);
     // solver.final_state.print();
-    // solver.dfs(shuffledCube);
+    solver.dfs(cubo);
 
     return 0;
 }

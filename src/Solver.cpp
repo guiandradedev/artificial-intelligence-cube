@@ -34,8 +34,6 @@ namespace std {
     };
 }
 
-
-
 using namespace std;
 
 // Todo:
@@ -90,26 +88,12 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
     cout << "Reconstrucao do cubo:" << endl;
     int moves = 0;
     while(final_move->root != nullptr) {
-        cout << final_move->mov << endl;
+        cout << moviments_name[final_move->mov] << endl;
         final_move = final_move->root;
         moves++;
     }
-    cout << final_move->mov << endl;
+    
     cout << "Com um total de " << moves << " movimentos." << endl;
-}
-
-void reconstruct_path(Solver::Node* root) {
-
-    vector<char*> path;
-    
-    int moves = 0;
-    while (root != nullptr)
-    {
-        root = root->root;
-        moves++;
-    }
-    
-
 }
 
 void Solver::bfs(Cube cube) {

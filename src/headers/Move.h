@@ -29,7 +29,7 @@ namespace Move {
     Cube L_BW(const Cube& cube);  // L (Left) sentido anti-horário
     Cube F_BW(const Cube& cube);  // F (Front) sentido anti-horário
 
-    const char* reverse_moves(const char* key);
+    // const char* reverse_moves(const char* key);
 
     const bool isInverse(short int move1, short int move2);
 }

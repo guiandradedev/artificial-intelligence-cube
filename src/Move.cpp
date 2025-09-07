@@ -98,27 +98,27 @@ namespace Move {
         return newCube;
     }
 
-    const char* reverse_moves(const char* key) {
-        // TODO Adicionar hash
-        if (strcmp(key, "UFW") == 0) {
-            return "UBW";
-        } else if (strcmp(key, "UBW") == 0) {
-            return "UFW";
-        } else if (strcmp(key, "LFW") == 0) {
-            return "LBW";
-        } else if (strcmp(key, "LBW") == 0) {
-            return "LFW";
-        } else if (strcmp(key, "FBW") == 0) {
-            return "FFW";
-        } else if (strcmp(key, "FFW") == 0) {
-            return "FBW";
-        } else {
-            return nullptr;
-        }
-    }
+    // const char* reverse_moves(const char* key) {
+    //     // TODO Adicionar hash
+    //     if (strcmp(key, "UFW") == 0) {
+    //         return "UBW";
+    //     } else if (strcmp(key, "UBW") == 0) {
+    //         return "UFW";
+    //     } else if (strcmp(key, "LFW") == 0) {
+    //         return "LBW";
+    //     } else if (strcmp(key, "LBW") == 0) {
+    //         return "LFW";
+    //     } else if (strcmp(key, "FBW") == 0) {
+    //         return "FFW";
+    //     } else if (strcmp(key, "FFW") == 0) {
+    //         return "FBW";
+    //     } else {
+    //         return nullptr;
+    //     }
+    // }
 
     const bool isInverse(short int move1, short int move2) {
         // Verifica se move1 e move2 são inversos
-        return (move1 ^ 1) == (move2);
+        return (move1 ^ 1) == (move2); // move1 xor 1 == move2
     }
 }

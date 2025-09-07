@@ -16,9 +16,7 @@ public:
     MiniCube matrix[2][2][2];
 
     MiniCube position(int x, int y, int z);
-
-    // char moviments[6][4] = { "UFW", "UBW", "LFW", "LBW", "FBW", "FFW" };
-
+    
     short int moviments[6] = {0, 1, 2, 3, 4, 5};
     /* 
        UFW = 0, UBW = 1,
