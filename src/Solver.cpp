@@ -1,16 +1,17 @@
-#include "Solver.h"
-#include "Cube.h"
+#include "headers/Solver.h"
+#include "headers/Cube.h"
 #include <queue>
 #include <stack>
-#include "Move.h"
+#include "headers/Move.h"
 #include <set>
 #include <iostream>
 #include <unordered_set>
 #include <chrono>
 #include <cstring>
-#include "DataStructure.h"
-#include "Queue.h"
-#include "Stack.h"
+#include "headers/DataStructure.h"
+#include "headers/Queue.h"
+#include "headers/Stack.h"
+
 
 using namespace std::chrono;
 namespace std {
@@ -43,12 +44,13 @@ Solver::Solver() {
     final_state.init();
 }
 
-void Solver::algorithm(Cube cube, DataStructure& structure) {
+void Solver::algorithm(Cube cube, DataStructure& structure, int max_depth) {
+
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
     int i=0;
 
-    Node* root = new Node{cube, nullptr, {}}; 
+    Node* root = new Node{cube, nullptr, {},0}; 
     Node* final_move;
     structure.insert(root);
     visited.insert(root->cube);
@@ -56,13 +58,17 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
     while(!structure.isEmpty()) {
         Node* state = structure.remove();
 
+        if (max_depth >= 0 && state->depth > max_depth) {
+            continue; 
+        }
+
         if(state->cube == final_state) {
             cout << "Solucao encontrada na " << i << " iteracao!" << endl;
             final_move = state;
             break;
         }
 
-        for(const auto& moviment : cube.moviments) {
+        for(const auto& moviment : state->cube.moviments) {
             // if(strcmp(Move::reverse_moves(moviment), state->mov) == 0) continue;
             
             // std::cout << "Movimento: " << moviment << " na iteracao " << i << endl;
@@ -75,7 +81,7 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
             if (visited.count(next_cube) == 0) {
                 visited.insert(next_cube);
                 
-                Node* next_node = new Node{next_cube, state, moviment};
+                Node* next_node = new Node{next_cube, state, moviment,state->depth+1};
                 
                 structure.insert(next_node);
             }
@@ -99,11 +105,11 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
 void Solver::bfs(Cube cube) {
     Queue queue_structure;
     cout << "Iniciando BFS..." << endl;
-    algorithm(cube, queue_structure);
+    algorithm(cube, queue_structure, -1);
 }
 
 void Solver::dfs(Cube cube) {
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;
-    algorithm(cube, stack_structure);
+    algorithm(cube, stack_structure, 14);
 }

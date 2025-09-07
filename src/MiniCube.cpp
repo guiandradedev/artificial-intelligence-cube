@@ -1,5 +1,5 @@
 // MiniCube.cpp
-#include "MiniCube.h"
+#include "headers/MiniCube.h"
 #include <cstring>
 #include <iostream>
 

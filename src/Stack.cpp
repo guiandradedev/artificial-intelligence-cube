@@ -1,4 +1,4 @@
-#include "Stack.h"
+#include "headers/Stack.h"
 
 void Stack::insert(Solver::Node* node) {
     stack.push(node);

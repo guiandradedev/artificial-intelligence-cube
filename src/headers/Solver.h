@@ -7,7 +7,7 @@ class DataStructure; // Declaracao antecipada
 
 class Solver {
 protected:
-    void algorithm(Cube cube, DataStructure& structure);
+    void algorithm(Cube cube, DataStructure& structure, int max_depth);
 
 public:
     Solver();       
@@ -15,6 +15,7 @@ public:
         Cube cube;
         Node* root;
         short int mov; // Movimento que gerou esse estado
+        int depth;
     };
     Cube final_state;
 

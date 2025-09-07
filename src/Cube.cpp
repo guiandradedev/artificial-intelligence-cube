@@ -1,12 +1,12 @@
-#include "Cube.h"
+#include "headers/Cube.h"
 #include <map>
 #include <array>
 #include <string>
 #include <vector>
 #include <functional>
-#include "Move.h"
+#include "headers/Move.h"
 #include <cstring>
-#include <Solver.h>
+#include "headers/Solver.h"
 using namespace std;
 
 Cube::Cube() {}

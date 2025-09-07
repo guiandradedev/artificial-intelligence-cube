@@ -1,9 +1,9 @@
-#include "Cube.h"
+#include "headers/Cube.h"
 #include <iostream>
 #include <random>
-#include "Move.h"
-#include "Solver.h"
-#include "MiniCube.h"
+#include "headers/Move.h"
+#include "headers/Solver.h"
+#include "headers/MiniCube.h"
 
 using namespace std;
 

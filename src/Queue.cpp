@@ -1,4 +1,4 @@
-#include "Queue.h"
+#include "headers/Queue.h"
 
 void Queue::insert(Solver::Node* node) {
     queue.push(node);
