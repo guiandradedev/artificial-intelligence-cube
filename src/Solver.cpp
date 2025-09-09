@@ -48,7 +48,7 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
     auto start = high_resolution_clock::now();
     int i=0;
 
-    Node* root = new Node{cube, nullptr, {}}; 
+    Node* root = new Node{cube, nullptr, -1}; 
     Node* final_move;
     structure.insert(root);
     visited.insert(root->cube);
@@ -69,6 +69,10 @@ void Solver::algorithm(Cube cube, DataStructure& structure) {
             
             // Se for inverso do anterior, pula pro proximo
             if(Move::isInverse(moviment, state->mov)) continue;
+
+            if (state->root && state->root->mov == moviment && state->mov == moviment) continue;
+
+            if (state->mov == moviment &&(moviment == 1 || moviment == 3 || moviment == 5)) continue;
 
             Cube next_cube = state->cube.applyMove(moviment);
             

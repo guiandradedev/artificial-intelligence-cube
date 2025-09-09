@@ -139,7 +139,6 @@ Cube Cube::shuffle(int moves, bool print) const {
         int functionIndex = rand() % functions_possible;
 
         if(Move::isInverse(functionIndex, last_move)){
-            std::cout << "pulei" << std::endl;
             i--;
             continue;
         }

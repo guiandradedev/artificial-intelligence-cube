@@ -123,7 +123,7 @@ int main() {
     
     solver.bfs(cubo);
     // solver.final_state.print();
-    solver.dfs(cubo);
+    // solver.dfs(cubo);
 
     return 0;
 }
