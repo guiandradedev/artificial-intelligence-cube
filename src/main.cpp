@@ -122,6 +122,10 @@ int main() {
 
     
     solver.bfs(cubo);
+
+    std::cout << "Iniciando paralelizacao..." << endl;
+
+    solver.algorithm_parallel(cubo);
     // solver.final_state.print();
     // solver.dfs(cubo);
 

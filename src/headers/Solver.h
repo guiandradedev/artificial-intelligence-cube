@@ -2,6 +2,7 @@
 #include <vector>
 #include "Cube.h"
 #include <functional>
+#include <memory>
 
 class DataStructure; // Declaracao antecipada
 
@@ -18,6 +19,15 @@ public:
     };
     Cube final_state;
 
+    
+    struct Node2 {
+        Cube cube;
+        std::weak_ptr<Node2> root; // Ponteiro fraco para o pai para evitar ciclos de referência
+        short int mov;
+    };
+
+    using NodePtr = std::shared_ptr<Node2>;
+    using WeakNodePtr = std::weak_ptr<Node2>;
     /* 
        UFW = 0, UBW = 1,
        LFW = 2, LBW = 3,
@@ -29,4 +39,6 @@ public:
 
     void bfs(Cube cube);
     void dfs(Cube cube);
+
+    void algorithm_parallel(const Cube& cube);
 };
