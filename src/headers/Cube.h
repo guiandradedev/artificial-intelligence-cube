@@ -15,7 +15,7 @@ public:
     Cube cloneMatrix() const;
     MiniCube matrix[2][2][2];
 
-    MiniCube position(int x, int y, int z);
+    // MiniCube position(int x, int y, int z);
     
     short int moviments[6] = {0, 1, 2, 3, 4, 5};
     /* 

@@ -155,6 +155,6 @@ Cube Cube::shuffle(int moves, bool print) const {
     return newCube;
 }
 
-MiniCube Cube::position(int x, int y, int z) {
-    return matrix[x][y][z];
-}
+// MiniCube Cube::position(int x, int y, int z) {
+//     return matrix[x][y][z];
+// }
