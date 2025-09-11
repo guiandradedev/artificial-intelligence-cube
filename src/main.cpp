@@ -4,6 +4,7 @@
 #include "Move.h"
 #include "Solver.h"
 #include "MiniCube.h"
+#include "Hasher.h"
 
 using namespace std;
 
@@ -94,11 +95,13 @@ int planner[8][6];
 /// @brief 
 /// @return 
 int main() {
+
     srand(time(NULL));
     Cube cubo;
     cubo.init();
     cubo.print();
     cout << "" << endl;
+    Hasher::init("./src/hashing.bin");
 
     cubo = cubo.shuffle(15, true);
 
@@ -114,14 +117,19 @@ int main() {
     // cubo = Move::L_BW(cubo);
     // cubo = Move::U_FW(cubo);
 
-
-
-    Solver solver;
-
-    // std::cout << "teste" << Move::isInverse(1, 1) << endl;
+    
+    short int distance = Hasher::get_distance(cubo);
 
     
+    Solver solver;
+    
+    
+    
     solver.bfs(cubo);
+    
+    // std::cout << "teste" << Move::isInverse(1, 1) << endl;
+    
+    std::cout << "hasher: " << distance << "movimentos" << std::endl;
     // solver.final_state.print();
     // solver.dfs(cubo);
 
