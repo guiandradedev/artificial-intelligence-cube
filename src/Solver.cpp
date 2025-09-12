@@ -51,16 +51,12 @@ void Solver::algorithm(Cube cube, DataStructure& structure, int max_depth) {
     int i=0;
 
     Node* root = new Node{cube, nullptr, {},0}; 
-    Node* final_move;
+    Node* final_move = nullptr;
     structure.insert(root);
     visited.insert(root->cube);
     
-    while(!structure.isEmpty()) {
+    while(!structure.isEmpty() && final_move == nullptr) {
         Node* state = structure.remove();
-
-        if (max_depth >= 0 && state->depth > max_depth) {
-            continue; 
-        }
 
         if(state->cube == final_state) {
             cout << "Solucao encontrada na " << i << " iteracao!" << endl;
@@ -74,13 +70,26 @@ void Solver::algorithm(Cube cube, DataStructure& structure, int max_depth) {
             // std::cout << "Movimento: " << moviment << " na iteracao " << i << endl;
             
             // Se for inverso do anterior, pula pro proximo
-            if(Move::isInverse(moviment, state->mov)) continue;
+            if(Move::isInverse(moviment, state->mov)){
+                continue;
+            }
 
             Cube next_cube = state->cube.applyMove(moviment);
             
             if (visited.count(next_cube) == 0) {
                 visited.insert(next_cube);
                 
+                if(max_depth >= 0){
+                    if(state->depth == 13){
+                        cout << "\nBOMBAA!\n";
+                    }
+                    cout << state->depth;
+                }
+
+                if (max_depth >= 0 && state->depth > max_depth) {
+                    continue; 
+                }
+
                 Node* next_node = new Node{next_cube, state, moviment,state->depth+1};
                 
                 structure.insert(next_node);
@@ -89,7 +98,12 @@ void Solver::algorithm(Cube cube, DataStructure& structure, int max_depth) {
         i++;
     }
     auto end = high_resolution_clock::now();
-    cout << "Tempo BFS: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
+    cout << "Tempo de execução do algoritmo: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
+
+    if (final_move == nullptr) {
+        cout << "Nenhuma solução encontrada até a profundidade " << max_depth << endl;
+        return;
+    }
 
     cout << "Reconstrucao do cubo:" << endl;
     int moves = 0;
@@ -108,8 +122,8 @@ void Solver::bfs(Cube cube) {
     algorithm(cube, queue_structure, -1);
 }
 
-void Solver::dfs(Cube cube) {
+void Solver::dfs(Cube cube) { 
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;
-    algorithm(cube, stack_structure, 14);
+    algorithm(cube, stack_structure, 12);
 }

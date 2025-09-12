@@ -120,10 +120,10 @@ int main() {
 
     // std::cout << "teste" << Move::isInverse(1, 1) << endl;
 
-    
-    solver.bfs(cubo);
-    // solver.final_state.print();
     solver.dfs(cubo);
+    //solver.bfs(cubo);
+    // solver.final_state.print();
+
 
     return 0;
 }
