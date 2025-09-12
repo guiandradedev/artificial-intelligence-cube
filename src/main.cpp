@@ -130,6 +130,8 @@ int main() {
     // std::cout << "teste" << Move::isInverse(1, 1) << endl;
     
     std::cout << "hasher: " << distance << "movimentos" << std::endl;
+
+    solver.A_star(cubo);
     // solver.final_state.print();
     // solver.dfs(cubo);
 

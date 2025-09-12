@@ -43,22 +43,26 @@ void Hasher::init(const std::string &filename)
     std::cout << "Hasher inicializado. " << distance_hash.size() << " estados carregados do arquivo." << std::endl;
 }
 
-short int Hasher::get_distance(const Cube& cube) {
-    if (!is_initialized) {
+short int Hasher::get_distance(const Cube &cube)
+{
+    if (!is_initialized)
+    {
         std::cerr << "ERRO: Hasher::getDistance() chamado antes de Hasher::init()." << std::endl;
         return -1;
     }
 
     auto it = distance_hash.find(cube);
-    if (it != distance_hash.end()) {
+    if (it != distance_hash.end())
+    {
         // Encontrou o estado no mapa, retorna a distância (o valor)
         return it->second;
     }
-    
+
     // Não encontrou o estado no mapa
     return -1;
 }
 
-size_t Hasher::countStoredStates() {
+size_t Hasher::countStoredStates()
+{
     return distance_hash.size();
-}   
+}
