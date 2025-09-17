@@ -16,13 +16,13 @@ void Cube::init()
 
     int colors[8][3] = {
         {4, 2, 0}, // manteu
-        {4, 2, 1}, // manteu
+        {2, 4, 1}, // manteu
         {3, 4, 0}, // manteu
-        {3, 4, 1}, // manteu
+        {4, 3, 1}, // manteu
         {2, 5, 0},
-        {2, 5, 1},
+        {5, 2, 1},
         {5, 3, 0},
-        {5, 3, 1}
+        {3, 5, 1}
     };
     // 0 amarelo
     // 1 branco

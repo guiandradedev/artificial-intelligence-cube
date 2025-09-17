@@ -106,6 +106,8 @@ int main() {
 
     cubo = cubo.shuffle(15, true);
 
+    cubo.print();
+
     // cubo = Move::U_FW(cubo);
     // cubo = Move::L_FW(cubo);
     // cubo = Move::F_FW(cubo);
