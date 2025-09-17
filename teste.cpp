@@ -12,7 +12,7 @@
 #include "Hasher.h"
 #include <string>
 #include <chrono>
-
+#include <sstream>
 // MiniCube cube[2][2][2];
 Cube cubo;
 Solver solver;
@@ -35,12 +35,68 @@ double rotY = 0.0, rotX = 0.0, rotZ = 0.0; // começa olhando a face vermelha, s
 const float OFFSET = 0.01f;                // separação entre cubinhos
 const float S = 0.5f;                      // semi-tamanho do cubinho
 
-std::string overlay_message = "";
+std::string path_message = "";
+std::string execution_time_message = "";
+std::string algoritm_message = "";
 
 void setupCube()
 {
     cubo.init();
     Hasher::init("./src/hashing.bin");
+}
+
+void drawText(float x, float y, const std::string &text, const RGB &color, void *font)
+{
+    glColor3f(color.r, color.g, color.b);
+    glRasterPos2f(x, y);
+    for (const char *c = text.c_str(); *c != '\0'; ++c)
+    {
+        glutBitmapCharacter(font, *c);
+    }
+}
+void renderOverlay()
+{
+    // Prepara o ambiente 2D para desenhar texto
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    int viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    gluOrtho2D(0, viewport[2], 0, viewport[3]);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glDisable(GL_DEPTH_TEST);
+
+    // Desenha a mensagem da solução, se houver, uma debaixo da outra
+    float y_pos = viewport[3] - 30.0f;
+    const float line_height = 20.0f; // Espaçamento entre as linhas
+
+    if (!algoritm_message.empty())
+    {
+        drawText(10.0f, y_pos, algoritm_message, {1.0f, 0.0f, 0.0f}, GLUT_BITMAP_HELVETICA_18);
+        y_pos -= line_height; // Move a posição Y para a próxima linha
+    }
+    if (!execution_time_message.empty())
+    {
+        drawText(10.0f, y_pos, execution_time_message, {1.0f, 0.0f, 0.0f}, GLUT_BITMAP_HELVETICA_18);
+        y_pos -= line_height; // Move a posição Y para a próxima linha
+    }
+    if (!path_message.empty())
+    {
+        drawText(10.0f, y_pos, path_message, {1.0f, 0.0f, 0.0f}, GLUT_BITMAP_HELVETICA_18);
+    }
+
+    // Desenha um texto de ajuda fixo
+    std::string help_text = "Setas: Girar | s: Embaralhar | b: BFS | d: DFS | a: A* | r: Resetar";
+    drawText(10.0f, 10.0f, help_text, {0.2f, 0.2f, 0.2f}, GLUT_BITMAP_HELVETICA_12);
+
+    // Restaura o ambiente 3D
+    glEnable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 }
 
 static inline void quadFill(const RGB &cor,
@@ -242,36 +298,39 @@ void display()
         quadFill(C[cubo.matrix[1][1][0].right], -OFFSET, S, S, -S, S, S, -S, OFFSET, S, -OFFSET, OFFSET, S);
     }
 
-    if (!overlay_message.empty())
-    {
-        // Salva as matrizes atuais
-        glMatrixMode(GL_PROJECTION);
-        glPushMatrix();
-        glLoadIdentity();
-        int viewport[4];
-        glGetIntegerv(GL_VIEWPORT, viewport);
-        gluOrtho2D(0, viewport[2], 0, viewport[3]);
-        glMatrixMode(GL_MODELVIEW);
-        glPushMatrix();
-        glLoadIdentity();
+    // if (!path_message.empty())
+    // {
+    //     // Salva as matrizes atuais
+    //     glMatrixMode(GL_PROJECTION);
+    //     glPushMatrix();
+    //     glLoadIdentity();
+    //     int viewport[4];
+    //     glGetIntegerv(GL_VIEWPORT, viewport);
+    //     gluOrtho2D(0, viewport[2], 0, viewport[3]);
+    //     glMatrixMode(GL_MODELVIEW);
+    //     glPushMatrix();
+    //     glLoadIdentity();
+    //     glDisable(GL_DEPTH_TEST);
 
-        // Define cor do texto (vermelho)
-        glColor3f(1.0f, 0.0f, 0.0f);
-        // Posição: canto superior esquerdo
-        float x = 10.0f;
-        float y = viewport[3] - 30.0f;
-        glRasterPos2f(x, y);
-        for (const char *c = overlay_message.c_str(); *c != '\0'; ++c)
-        {
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-        }
+    //     // Define cor do texto (vermelho)
+    //     glColor3f(1.0f, 0.0f, 0.0f);
+    //     // Posição: canto superior esquerdo
+    //     float x = 10.0f;
+    //     float y = viewport[3] - 30.0f;
+    //     glRasterPos2f(x, y);
+    //     for (const char *c = path_message.c_str(); *c != '\0'; ++c)
+    //     {
+    //         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+    //     }
 
-        // Restaura as matrizes
-        glPopMatrix();
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
-        glMatrixMode(GL_MODELVIEW);
-    }
+    //     // Restaura as matrizes
+    //     glPopMatrix();
+    //     glMatrixMode(GL_PROJECTION);
+    //     glPopMatrix();
+    //     glMatrixMode(GL_MODELVIEW);
+    //     glEnable(GL_DEPTH_TEST);
+    // }
+    renderOverlay();
 
     glutSwapBuffers();
 }
@@ -293,13 +352,24 @@ void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const st
 {
     if (achou)
     {
-        overlay_message = "Caminho " + nome_algoritmo + ": ";
-        for (size_t i = 0; i < path.size(); ++i)
+        std::ostringstream oss;
+        algoritm_message = "Caminho " + nome_algoritmo;
+        execution_time_message = "Tempo de execucao: " + std::to_string(duration_ms) + " ms";
+        if (!path.empty())
         {
-            Solver::Node *node_path = path[i];
-            overlay_message += Solver::moviments_name[node_path->mov] + std::string(" -> ");
+            for (size_t i = 0; i < path.size() - 1; ++i)
+            {
+                oss << Solver::moviments_name[path[i]->mov] << " -> ";
+            }
+            oss << Solver::moviments_name[path.back()->mov]; // Adiciona o último sem "->"
         }
-        overlay_message += "\nTempo: " + std::to_string(duration_ms) + " ms";
+        path_message = oss.str();
+    }
+    else
+    {
+        algoritm_message = "Algoritmo " + nome_algoritmo;
+        execution_time_message = ""; // Limpa a mensagem de tempo
+        path_message = "Solucao nao encontrada.";
     }
     glutPostRedisplay();
 }
