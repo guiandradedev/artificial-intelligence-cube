@@ -101,6 +101,7 @@ int main() {
     cubo.init();
     cubo.print();
     cout << "" << endl;
+    print(cubo);
     Hasher::init("./src/hashing.bin");
 
     cubo = cubo.shuffle(15, true);

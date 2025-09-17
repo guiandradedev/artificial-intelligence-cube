@@ -25,6 +25,7 @@ void MiniCube::print() {
     cout << left << 
             right <<
             // name <<
-            mid << endl;
+            mid << 
+            orientation << endl;
 
 }
