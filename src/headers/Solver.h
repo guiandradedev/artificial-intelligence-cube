@@ -10,20 +10,20 @@ class DataStructure; // Declaracao antecipada
 
 class Solver
 {
-protected:
-    bool algorithm(Cube cube, DataStructure &structure, std::vector<Cube>& path);
 
 public:
     Solver();
-    struct Node{
+    struct Node
+    {
         Cube cube;
         Node *root;
         short int mov; // Movimento que gerou esse estado
     };
-    
+
     Cube final_state;
 
-    struct AstarNode{
+    struct AstarNode
+    {
         Cube cube;
         int g_cost; // custo para chegar
         int f_cost; // f = g + h, custo total
@@ -43,8 +43,11 @@ public:
     static constexpr char moviments_name[6][4] = {"UFW", "UBW", "LFW", "LBW", "FFW", "FBW"};
 
     void A_star(Cube cube);
-    bool bfs(Cube cube, std::vector<Cube>& path);
-    bool dfs(Cube cube, std::vector<Cube>& path);
+    bool bfs(Cube cube, std::vector<Node*> &path);
+    bool dfs(Cube cube, std::vector<Node*> &path);
+
+protected:
+    bool algorithm(Cube cube, DataStructure &structure, std::vector<Node*> &path);
 };
 
 #endif

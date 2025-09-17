@@ -28,7 +28,7 @@ Solver::Solver()
     final_state.init();
 }
 
-bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Cube>& path)
+bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Node*>& path)
 {
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
@@ -53,7 +53,7 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Cube>& p
             while (final_move->root != nullptr)
             {
                 cout << moviments_name[final_move->mov] << endl;
-                path.push_back(final_move->cube);
+                path.push_back(final_move);
                 final_move = final_move->root;
                 moves++;
             }
@@ -101,14 +101,14 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Cube>& p
     return false;
 }
 
-bool Solver::bfs(Cube cube, std::vector<Cube>& path)
+bool Solver::bfs(Cube cube, std::vector<Node*>& path)
 {
     Queue queue_structure;
     cout << "Iniciando BFS..." << endl;
     return algorithm(cube, queue_structure, path);
 }
 
-bool Solver::dfs(Cube cube, std::vector<Cube>& path)
+bool Solver::dfs(Cube cube, std::vector<Node*>& path)
 {
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;

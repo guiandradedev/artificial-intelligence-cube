@@ -9,6 +9,9 @@
 #include "Move.h"
 #include "Solver.h"
 #include <vector>
+#include "Hasher.h"
+#include <string>
+#include <chrono>
 
 // MiniCube cube[2][2][2];
 Cube cubo;
@@ -32,22 +35,14 @@ double rotY = 0.0, rotX = 0.0, rotZ = 0.0; // começa olhando a face vermelha, s
 const float OFFSET = 0.01f;                // separação entre cubinhos
 const float S = 0.5f;                      // semi-tamanho do cubinho
 
+std::string overlay_message = "";
+
 void setupCube()
 {
     cubo.init();
-
-    // cubo.matrix[0][0][1].orientation = 2;
-    // cubo.matrix[0][1][1].orientation = 2;
-    const MiniCube &cube = cubo.matrix[1][0][1];
-
-    std::cout << "Cubinho" << cube.index << " ("
-              << cube.left << " "
-              << cube.right << " "
-              << cube.mid << " "
-              << cube.orientation << std::endl;
+    Hasher::init("./src/hashing.bin");
 }
 
-// Desenha um quadrado colorido (sem moldura; evita z-fighting)
 static inline void quadFill(const RGB &cor,
                             float x1, float y1, float z1,
                             float x2, float y2, float z2,
@@ -62,29 +57,6 @@ static inline void quadFill(const RGB &cor,
     glVertex3f(x4, y4, z4);
     glEnd();
 }
-void desenharCubinho(int x, int y, int z)
-{
-    glPushMatrix();
-    const float X = (x * 2.f - 1.f) * OFFSET;
-    const float Y = (y * 2.f - 1.f) * OFFSET;
-    const float Z = (z * 2.f - 1.f) * OFFSET;
-    glTranslatef(X, Y, Z);
-
-    // Get the colors for the current cubie from the Cube object's matrix
-    int left_color = cubo.matrix[x][y][z].left;
-    int right_color = cubo.matrix[x][y][z].right;
-    int mid_color = cubo.matrix[x][y][z].mid;
-
-    // Y = -S -> ESQUERDA (based on your cubie's left color)
-    // quadFill(C[left_color],
-    //             S, -S, -S, -S, -S, -S,
-    //             -S, S, -S, S, S, -S);
-    quadFill(C[left_color],
-             0.0f, 0.0f, -S, -S, 0.0f, -S, -S, -S, -S, 0.0f, -S, -S);
-    // 0.0f,0.0f,-S, -S,0.0f,-S, -S,-S-S, 0.0f,-S,-S);
-
-    glPopMatrix();
-}
 
 void display()
 {
@@ -92,20 +64,10 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // Começa olhando para a face VERMELHA (frente, +X),
-    // com topo AMARELO para cima (up = -Z)
-    // gluLookAt(
-    //     3.0, 0.0, 0.0,   // posição da câmera no +X
-    //     0.0, 0.0, 0.0,   // olha para o centro
-    //     0.0, 0.0, -1.0   // 'up' = -Z (amarelo para cima, branco para baixo)
-    // );
-    //     gluLookAt(
-    //     5.0, 0.0, 0.0,   // posição da câmera no +X, mais longe
-    //     0.0, 0.0, 0.0,   // olha para o centro
-    //     0.0, 0.0, -1.0   // 'up' = -Z (amarelo para cima, branco para baixo)
-    // );
-    gluLookAt(0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
+    gluLookAt(5.0, -2.0, 2.0,
+              0.0, 0.0, 0.0,
+              0.0, 0.0, 1.0);
+    glRotatef(-90, 0.f, 0.f, 1.f);
     glRotatef((float)rotZ, 0.f, 0.f, 1.f);
     glRotatef((float)rotX, 1.f, 0.f, 0.f);
     glRotatef((float)rotY, 0.f, 1.f, 0.f);
@@ -121,455 +83,194 @@ void display()
     // cubo.matrix[0][0][1].print();
     if (cubo.matrix[0][0][1].orientation == 0)
     {
-        quadFill(C[cubo.matrix[0][0][1].right],
-                 OFFSET, -S, -OFFSET,
-                 S, -S, -OFFSET,
-                 S, -S, -S,
-                 OFFSET, -S, -S);
-        quadFill(C[cubo.matrix[0][0][1].left],
-                 S, -S, -OFFSET,
-                 S, -OFFSET, -OFFSET,
-                 S, -OFFSET, -S,
-                 S, -S, -S);
-        quadFill(C[cubo.matrix[0][0][1].mid],
-                 OFFSET, -S, -S,
-                 S, -S, -S,
-                 S, -OFFSET, -S,
-                 OFFSET, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][0][1].right], OFFSET, -S, -OFFSET, S, -S, -OFFSET, S, -S, -S, OFFSET, -S, -S);
+        quadFill(C[cubo.matrix[0][0][1].left], S, -S, -OFFSET, S, -OFFSET, -OFFSET, S, -OFFSET, -S, S, -S, -S);
+        quadFill(C[cubo.matrix[0][0][1].mid], OFFSET, -S, -S, S, -S, -S, S, -OFFSET, -S, OFFSET, -OFFSET, -S);
     }
     else if (cubo.matrix[0][0][1].orientation == 1)
     {
-        quadFill(C[cubo.matrix[0][0][1].mid],
-                 OFFSET, -S, -OFFSET,
-                 S, -S, -OFFSET,
-                 S, -S, -S,
-                 OFFSET, -S, -S);
-        quadFill(C[cubo.matrix[0][0][1].right],
-                 S, -S, -OFFSET,
-                 S, -OFFSET, -OFFSET,
-                 S, -OFFSET, -S,
-                 S, -S, -S);
-        quadFill(C[cubo.matrix[0][0][1].left],
-                 OFFSET, -S, -S,
-                 S, -S, -S,
-                 S, -OFFSET, -S,
-                 OFFSET, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][0][1].mid], OFFSET, -S, -OFFSET, S, -S, -OFFSET, S, -S, -S, OFFSET, -S, -S);
+        quadFill(C[cubo.matrix[0][0][1].right], S, -S, -OFFSET, S, -OFFSET, -OFFSET, S, -OFFSET, -S, S, -S, -S);
+        quadFill(C[cubo.matrix[0][0][1].left], OFFSET, -S, -S, S, -S, -S, S, -OFFSET, -S, OFFSET, -OFFSET, -S);
     }
     else
     {
-        quadFill(C[cubo.matrix[0][0][1].mid],
-                 OFFSET, -S, -OFFSET,
-                 S, -S, -OFFSET,
-                 S, -S, -S,
-                 OFFSET, -S, -S);
-        quadFill(C[cubo.matrix[0][0][1].right],
-                 S, -S, -OFFSET,
-                 S, -OFFSET, -OFFSET,
-                 S, -OFFSET, -S,
-                 S, -S, -S);
-        quadFill(C[cubo.matrix[0][0][1].left],
-                 OFFSET, -S, -S,
-                 S, -S, -S,
-                 S, -OFFSET, -S,
-                 OFFSET, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][0][1].mid], OFFSET, -S, -OFFSET, S, -S, -OFFSET, S, -S, -S, OFFSET, -S, -S);
+        quadFill(C[cubo.matrix[0][0][1].right], S, -S, -OFFSET, S, -OFFSET, -OFFSET, S, -OFFSET, -S, S, -S, -S);
+        quadFill(C[cubo.matrix[0][0][1].left], OFFSET, -S, -S, S, -S, -S, S, -OFFSET, -S, OFFSET, -OFFSET, -S);
     }
 
     // Cubo inferior direita fundo
     if (cubo.matrix[0][1][1].orientation == 0)
     {
-        quadFill(C[cubo.matrix[0][1][1].right],
-                 -S, -OFFSET, -OFFSET,
-                 -S, -S, -OFFSET,
-                 -S, -S, -S,
-                 -S, -OFFSET, -S);
-        quadFill(C[cubo.matrix[0][1][1].left],
-                 -S, -S, -OFFSET,
-                 -OFFSET, -S, -OFFSET,
-                 -OFFSET, -S, -S,
-                 -S, -S, -S);
-        quadFill(C[cubo.matrix[0][1][1].mid],
-                 -S, -S, -S,
-                 -OFFSET, -S, -S,
-                 -OFFSET, -OFFSET, -S,
-                 -S, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][1][1].right], -S, -OFFSET, -OFFSET, -S, -S, -OFFSET, -S, -S, -S, -S, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][1][1].left], -S, -S, -OFFSET, -OFFSET, -S, -OFFSET, -OFFSET, -S, -S, -S, -S, -S);
+        quadFill(C[cubo.matrix[0][1][1].mid], -S, -S, -S, -OFFSET, -S, -S, -OFFSET, -OFFSET, -S, -S, -OFFSET, -S);
     }
     else if (cubo.matrix[0][1][1].orientation == 1)
     {
-        quadFill(C[cubo.matrix[0][1][1].mid],
-                 -S, -OFFSET, -OFFSET,
-                 -S, -S, -OFFSET,
-                 -S, -S, -S,
-                 -S, -OFFSET, -S);
-        quadFill(C[cubo.matrix[0][1][1].right],
-                 -S, -S, -OFFSET,
-                 -OFFSET, -S, -OFFSET,
-                 -OFFSET, -S, -S,
-                 -S, -S, -S);
-        quadFill(C[cubo.matrix[0][1][1].left],
-                 -S, -S, -S,
-                 -OFFSET, -S, -S,
-                 -OFFSET, -OFFSET, -S,
-                 -S, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][1][1].mid], -S, -OFFSET, -OFFSET, -S, -S, -OFFSET, -S, -S, -S, -S, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][1][1].right], -S, -S, -OFFSET, -OFFSET, -S, -OFFSET, -OFFSET, -S, -S, -S, -S, -S);
+        quadFill(C[cubo.matrix[0][1][1].left], -S, -S, -S, -OFFSET, -S, -S, -OFFSET, -OFFSET, -S, -S, -OFFSET, -S);
     }
     else
     {
-        quadFill(C[cubo.matrix[0][1][1].mid],
-                 -S, -OFFSET, -OFFSET,
-                 -S, -S, -OFFSET,
-                 -S, -S, -S,
-                 -S, -OFFSET, -S);
-        quadFill(C[cubo.matrix[0][1][1].right],
-                 -S, -S, -OFFSET,
-                 -OFFSET, -S, -OFFSET,
-                 -OFFSET, -S, -S,
-                 -S, -S, -S);
-        quadFill(C[cubo.matrix[0][1][1].left],
-                 -S, -S, -S,
-                 -OFFSET, -S, -S,
-                 -OFFSET, -OFFSET, -S,
-                 -S, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][1][1].mid], -S, -OFFSET, -OFFSET, -S, -S, -OFFSET, -S, -S, -S, -S, -OFFSET, -S);
+        quadFill(C[cubo.matrix[0][1][1].right], -S, -S, -OFFSET, -OFFSET, -S, -OFFSET, -OFFSET, -S, -S, -S, -S, -S);
+        quadFill(C[cubo.matrix[0][1][1].left], -S, -S, -S, -OFFSET, -S, -S, -OFFSET, -OFFSET, -S, -S, -OFFSET, -S);
     }
 
     // Cubo inferior esquerda frente
-    // cubo.matrix[1][0][1].print();
     if (cubo.matrix[1][0][1].orientation == 0)
     {
-        quadFill(C[cubo.matrix[1][0][1].right],
-                 S, OFFSET, -OFFSET,
-                 S, S, -OFFSET,
-                 S, S, -S,
-                 S, OFFSET, -S);
-        quadFill(C[cubo.matrix[1][0][1].left],
-                 OFFSET, S, -OFFSET,
-                 S, S, -OFFSET,
-                 S, S, -S,
-                 OFFSET, S, -S);
-        quadFill(C[cubo.matrix[1][0][1].mid],
-                 S, OFFSET, -S,
-                 S, S, -S,
-                 OFFSET, S, -S,
-                 OFFSET, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][0][1].right], S, OFFSET, -OFFSET, S, S, -OFFSET, S, S, -S, S, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][0][1].left], OFFSET, S, -OFFSET, S, S, -OFFSET, S, S, -S, OFFSET, S, -S);
+        quadFill(C[cubo.matrix[1][0][1].mid], S, OFFSET, -S, S, S, -S, OFFSET, S, -S, OFFSET, OFFSET, -S);
     }
     else if (cubo.matrix[1][0][1].orientation == 1)
     {
-        quadFill(C[cubo.matrix[1][0][1].mid],
-                 S, OFFSET, -OFFSET,
-                 S, S, -OFFSET,
-                 S, S, -S,
-                 S, OFFSET, -S);
-        quadFill(C[cubo.matrix[1][0][1].right],
-                 OFFSET, S, -OFFSET,
-                 S, S, -OFFSET,
-                 S, S, -S,
-                 OFFSET, S, -S);
-        quadFill(C[cubo.matrix[1][0][1].left],
-                 S, OFFSET, -S,
-                 S, S, -S,
-                 OFFSET, S, -S,
-                 OFFSET, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][0][1].mid], S, OFFSET, -OFFSET, S, S, -OFFSET, S, S, -S, S, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][0][1].right], OFFSET, S, -OFFSET, S, S, -OFFSET, S, S, -S, OFFSET, S, -S);
+        quadFill(C[cubo.matrix[1][0][1].left], S, OFFSET, -S, S, S, -S, OFFSET, S, -S, OFFSET, OFFSET, -S);
     }
     else
     {
         // esse ta diferente?
-        quadFill(C[cubo.matrix[1][0][1].left],
-                 S, OFFSET, -OFFSET,
-                 S, S, -OFFSET,
-                 S, S, -S,
-                 S, OFFSET, -S);
-        quadFill(C[cubo.matrix[1][0][1].mid],
-                 OFFSET, S, -OFFSET,
-                 S, S, -OFFSET,
-                 S, S, -S,
-                 OFFSET, S, -S);
-        quadFill(C[cubo.matrix[1][0][1].right],
-                 S, OFFSET, -S,
-                 S, S, -S,
-                 OFFSET, S, -S,
-                 OFFSET, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][0][1].left], S, OFFSET, -OFFSET, S, S, -OFFSET, S, S, -S, S, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][0][1].mid], OFFSET, S, -OFFSET, S, S, -OFFSET, S, S, -S, OFFSET, S, -S);
+        quadFill(C[cubo.matrix[1][0][1].right], S, OFFSET, -S, S, S, -S, OFFSET, S, -S, OFFSET, OFFSET, -S);
     }
 
     // Cubo inferior direita frente
     if (cubo.matrix[1][1][1].orientation == 0)
     {
-        quadFill(C[cubo.matrix[1][1][1].right],
-                 -S, S, -OFFSET,
-                 -OFFSET, S, -OFFSET,
-                 -OFFSET, S, -S,
-                 -S, S, -S);
-        quadFill(C[cubo.matrix[1][1][1].left],
-                 -S, S, -OFFSET,
-                 -S, OFFSET, -OFFSET,
-                 -S, OFFSET, -S,
-                 -S, S, -S);
-        quadFill(C[cubo.matrix[1][1][1].mid],
-                 -OFFSET, S, -S,
-                 -S, S, -S,
-                 -S, OFFSET, -S,
-                 -OFFSET, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][1][1].right], -S, S, -OFFSET, -OFFSET, S, -OFFSET, -OFFSET, S, -S, -S, S, -S);
+        quadFill(C[cubo.matrix[1][1][1].left], -S, S, -OFFSET, -S, OFFSET, -OFFSET, -S, OFFSET, -S, -S, S, -S);
+        quadFill(C[cubo.matrix[1][1][1].mid], -OFFSET, S, -S, -S, S, -S, -S, OFFSET, -S, -OFFSET, OFFSET, -S);
     }
     else if (cubo.matrix[1][1][1].orientation == 1)
     {
-        quadFill(C[cubo.matrix[1][1][1].mid],
-                 -S, S, -OFFSET,
-                 -OFFSET, S, -OFFSET,
-                 -OFFSET, S, -S,
-                 -S, S, -S);
-        quadFill(C[cubo.matrix[1][1][1].right],
-                 -S, S, -OFFSET,
-                 -S, OFFSET, -OFFSET,
-                 -S, OFFSET, -S,
-                 -S, S, -S);
-        quadFill(C[cubo.matrix[1][1][1].left],
-                 -OFFSET, S, -S,
-                 -S, S, -S,
-                 -S, OFFSET, -S,
-                 -OFFSET, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][1][1].mid], -S, S, -OFFSET, -OFFSET, S, -OFFSET, -OFFSET, S, -S, -S, S, -S);
+        quadFill(C[cubo.matrix[1][1][1].right], -S, S, -OFFSET, -S, OFFSET, -OFFSET, -S, OFFSET, -S, -S, S, -S);
+        quadFill(C[cubo.matrix[1][1][1].left], -OFFSET, S, -S, -S, S, -S, -S, OFFSET, -S, -OFFSET, OFFSET, -S);
     }
     else
     {
-        quadFill(C[cubo.matrix[1][1][1].left],
-                 -S, S, -OFFSET,
-                 -OFFSET, S, -OFFSET,
-                 -OFFSET, S, -S,
-                 -S, S, -S);
-        quadFill(C[cubo.matrix[1][1][1].mid],
-                 -S, S, -OFFSET,
-                 -S, OFFSET, -OFFSET,
-                 -S, OFFSET, -S,
-                 -S, S, -S);
-        quadFill(C[cubo.matrix[1][1][1].right],
-                 -OFFSET, S, -S,
-                 -S, S, -S,
-                 -S, OFFSET, -S,
-                 -OFFSET, OFFSET, -S);
+        quadFill(C[cubo.matrix[1][1][1].left], -S, S, -OFFSET, -OFFSET, S, -OFFSET, -OFFSET, S, -S, -S, S, -S);
+        quadFill(C[cubo.matrix[1][1][1].mid], -S, S, -OFFSET, -S, OFFSET, -OFFSET, -S, OFFSET, -S, -S, S, -S);
+        quadFill(C[cubo.matrix[1][1][1].right], -OFFSET, S, -S, -S, S, -S, -S, OFFSET, -S, -OFFSET, OFFSET, -S);
     }
 
     // Cubo superior esquerda fundo
     if (cubo.matrix[0][0][0].orientation == 0)
     {
         // quadFill(C[cubo.matrix[0][0][0].left], // laranja (traseira)
-        quadFill(C[cubo.matrix[0][0][0].left], // verde (direita)
-                 OFFSET, -S, OFFSET,
-                 S, -S, OFFSET,
-                 S, -S, S,
-                 OFFSET, -S, S);
-        quadFill(C[cubo.matrix[0][0][0].right],
-                 S, -S, OFFSET,
-                 S, -OFFSET, OFFSET,
-                 S, -OFFSET, S,
-                 S, -S, S);
-        quadFill(C[cubo.matrix[0][0][0].mid],
-                 OFFSET, -S, S,
-                 S, -S, S,
-                 S, -OFFSET, S,
-                 OFFSET, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][0][0].left], OFFSET, -S, OFFSET, S, -S, OFFSET, S, -S, S, OFFSET, -S, S);
+        quadFill(C[cubo.matrix[0][0][0].right], S, -S, OFFSET, S, -OFFSET, OFFSET, S, -OFFSET, S, S, -S, S);
+        quadFill(C[cubo.matrix[0][0][0].mid], OFFSET, -S, S, S, -S, S, S, -OFFSET, S, OFFSET, -OFFSET, S);
     }
     else if (cubo.matrix[0][0][0].orientation == 1)
     {
-        quadFill(C[cubo.matrix[0][0][0].right], // verde (direita)
-                 OFFSET, -S, OFFSET,
-                 S, -S, OFFSET,
-                 S, -S, S,
-                 OFFSET, -S, S);
-        quadFill(C[cubo.matrix[0][0][0].mid],
-                 S, -S, OFFSET,
-                 S, -OFFSET, OFFSET,
-                 S, -OFFSET, S,
-                 S, -S, S);
-        quadFill(C[cubo.matrix[0][0][0].left],
-                 OFFSET, -S, S,
-                 S, -S, S,
-                 S, -OFFSET, S,
-                 OFFSET, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][0][0].right], OFFSET, -S, OFFSET, S, -S, OFFSET, S, -S, S, OFFSET, -S, S);
+        quadFill(C[cubo.matrix[0][0][0].mid], S, -S, OFFSET, S, -OFFSET, OFFSET, S, -OFFSET, S, S, -S, S);
+        quadFill(C[cubo.matrix[0][0][0].left], OFFSET, -S, S, S, -S, S, S, -OFFSET, S, OFFSET, -OFFSET, S);
     }
     else
     {
-        quadFill(C[cubo.matrix[0][0][0].mid], // verde (direita)
-                 OFFSET, -S, OFFSET,
-                 S, -S, OFFSET,
-                 S, -S, S,
-                 OFFSET, -S, S);
-        quadFill(C[cubo.matrix[0][0][0].left],
-                 S, -S, OFFSET,
-                 S, -OFFSET, OFFSET,
-                 S, -OFFSET, S,
-                 S, -S, S);
-        quadFill(C[cubo.matrix[0][0][0].right],
-                 OFFSET, -S, S,
-                 S, -S, S,
-                 S, -OFFSET, S,
-                 OFFSET, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][0][0].mid], OFFSET, -S, OFFSET, S, -S, OFFSET, S, -S, S, OFFSET, -S, S);
+        quadFill(C[cubo.matrix[0][0][0].left], S, -S, OFFSET, S, -OFFSET, OFFSET, S, -OFFSET, S, S, -S, S);
+        quadFill(C[cubo.matrix[0][0][0].right], OFFSET, -S, S, S, -S, S, S, -OFFSET, S, OFFSET, -OFFSET, S);
     }
 
     // Cubo superior direita fundo
     if (cubo.matrix[0][1][0].orientation == 0)
     {
-        quadFill(C[cubo.matrix[0][1][0].left], // laranja (traseira)
-                 -S, -OFFSET, OFFSET,
-                 -S, -S, OFFSET,
-                 -S, -S, S,
-                 -S, -OFFSET, S);
-        quadFill(C[cubo.matrix[0][1][0].right], // azul (esquerda)
-                 -S, -S, OFFSET,
-                 -OFFSET, -S, OFFSET,
-                 -OFFSET, -S, S,
-                 -S, -S, S);
-        quadFill(C[cubo.matrix[0][1][0].mid], // amarelo (face superior)
-                 -S, -S, S,
-                 -OFFSET, -S, S,
-                 -OFFSET, -OFFSET, S,
-                 -S, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][1][0].left], -S, -OFFSET, OFFSET, -S, -S, OFFSET, -S, -S, S, -S, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][1][0].right], -S, -S, OFFSET, -OFFSET, -S, OFFSET, -OFFSET, -S, S, -S, -S, S);
+        quadFill(C[cubo.matrix[0][1][0].mid], -S, -S, S, -OFFSET, -S, S, -OFFSET, -OFFSET, S, -S, -OFFSET, S);
     }
     else if (cubo.matrix[0][1][0].orientation == 1)
     {
-        quadFill(C[cubo.matrix[0][1][0].right], // laranja (traseira)
-                 -S, -OFFSET, OFFSET,
-                 -S, -S, OFFSET,
-                 -S, -S, S,
-                 -S, -OFFSET, S);
-        quadFill(C[cubo.matrix[0][1][0].mid], // azul (esquerda)
-                 -S, -S, OFFSET,
-                 -OFFSET, -S, OFFSET,
-                 -OFFSET, -S, S,
-                 -S, -S, S);
-        quadFill(C[cubo.matrix[0][1][0].left], // amarelo (face superior)
-                 -S, -S, S,
-                 -OFFSET, -S, S,
-                 -OFFSET, -OFFSET, S,
-                 -S, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][1][0].right], -S, -OFFSET, OFFSET, -S, -S, OFFSET, -S, -S, S, -S, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][1][0].mid], -S, -S, OFFSET, -OFFSET, -S, OFFSET, -OFFSET, -S, S, -S, -S, S);
+        quadFill(C[cubo.matrix[0][1][0].left], -S, -S, S, -OFFSET, -S, S, -OFFSET, -OFFSET, S, -S, -OFFSET, S);
     }
     else
     {
-        quadFill(C[cubo.matrix[0][1][0].mid], // laranja (traseira)
-                 -S, -OFFSET, OFFSET,
-                 -S, -S, OFFSET,
-                 -S, -S, S,
-                 -S, -OFFSET, S);
-        quadFill(C[cubo.matrix[0][1][0].left], // azul (esquerda)
-                 -S, -S, OFFSET,
-                 -OFFSET, -S, OFFSET,
-                 -OFFSET, -S, S,
-                 -S, -S, S);
-        quadFill(C[cubo.matrix[0][1][0].right], // amarelo (face superior)
-                 -S, -S, S,
-                 -OFFSET, -S, S,
-                 -OFFSET, -OFFSET, S,
-                 -S, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][1][0].mid], -S, -OFFSET, OFFSET, -S, -S, OFFSET, -S, -S, S, -S, -OFFSET, S);
+        quadFill(C[cubo.matrix[0][1][0].left], -S, -S, OFFSET, -OFFSET, -S, OFFSET, -OFFSET, -S, S, -S, -S, S);
+        quadFill(C[cubo.matrix[0][1][0].right], -S, -S, S, -OFFSET, -S, S, -OFFSET, -OFFSET, S, -S, -OFFSET, S);
     }
 
     // Cubo superior esquerda frente OK
     if (cubo.matrix[1][0][0].orientation == 0)
     {
-        quadFill(C[cubo.matrix[1][0][0].left],
-                 S, OFFSET, OFFSET,
-                 S, S, OFFSET,
-                 S, S, S,
-                 S, OFFSET, S);
-
-        quadFill(C[cubo.matrix[1][0][0].right],
-                 OFFSET, S, OFFSET,
-                 S, S, OFFSET,
-                 S, S, S,
-                 OFFSET, S, S);
-        quadFill(C[cubo.matrix[1][0][0].mid],
-                 S, OFFSET, S,
-                 S, S, S,
-                 OFFSET, S, S,
-                 OFFSET, OFFSET, S);
+        quadFill(C[cubo.matrix[1][0][0].left], S, OFFSET, OFFSET, S, S, OFFSET, S, S, S, S, OFFSET, S);
+        quadFill(C[cubo.matrix[1][0][0].right], OFFSET, S, OFFSET, S, S, OFFSET, S, S, S, OFFSET, S, S);
+        quadFill(C[cubo.matrix[1][0][0].mid], S, OFFSET, S, S, S, S, OFFSET, S, S, OFFSET, OFFSET, S);
     }
     else if (cubo.matrix[1][0][0].orientation == 1)
     {
-        quadFill(C[cubo.matrix[1][0][0].right],
-                 S, OFFSET, OFFSET,
-                 S, S, OFFSET,
-                 S, S, S,
-                 S, OFFSET, S);
-
-        quadFill(C[cubo.matrix[1][0][0].mid],
-                 OFFSET, S, OFFSET,
-                 S, S, OFFSET,
-                 S, S, S,
-                 OFFSET, S, S);
-        quadFill(C[cubo.matrix[1][0][0].left],
-                 S, OFFSET, S,
-                 S, S, S,
-                 OFFSET, S, S,
-                 OFFSET, OFFSET, S);
+        quadFill(C[cubo.matrix[1][0][0].right], S, OFFSET, OFFSET, S, S, OFFSET, S, S, S, S, OFFSET, S);
+        quadFill(C[cubo.matrix[1][0][0].mid], OFFSET, S, OFFSET, S, S, OFFSET, S, S, S, OFFSET, S, S);
+        quadFill(C[cubo.matrix[1][0][0].left], S, OFFSET, S, S, S, S, OFFSET, S, S, OFFSET, OFFSET, S);
     }
     else
     {
-        quadFill(C[cubo.matrix[1][0][0].mid],
-                 S, OFFSET, OFFSET,
-                 S, S, OFFSET,
-                 S, S, S,
-                 S, OFFSET, S);
-
-        quadFill(C[cubo.matrix[1][0][0].left],
-                 OFFSET, S, OFFSET,
-                 S, S, OFFSET,
-                 S, S, S,
-                 OFFSET, S, S);
-        quadFill(C[cubo.matrix[1][0][0].right],
-                 S, OFFSET, S,
-                 S, S, S,
-                 OFFSET, S, S,
-                 OFFSET, OFFSET, S);
+        quadFill(C[cubo.matrix[1][0][0].mid], S, OFFSET, OFFSET, S, S, OFFSET, S, S, S, S, OFFSET, S);
+        quadFill(C[cubo.matrix[1][0][0].left], OFFSET, S, OFFSET, S, S, OFFSET, S, S, S, OFFSET, S, S);
+        quadFill(C[cubo.matrix[1][0][0].right], S, OFFSET, S, S, S, S, OFFSET, S, S, OFFSET, OFFSET, S);
     }
 
     // Cubo superior direita frente
     if (cubo.matrix[1][1][0].orientation == 0)
     {
-        quadFill(C[cubo.matrix[1][1][0].left],
-                 -S, S, OFFSET,
-                 -OFFSET, S, OFFSET,
-                 -OFFSET, S, S,
-                 -S, S, S);
-        quadFill(C[cubo.matrix[1][1][0].right], // vermelho (frente)
-                 -S, S, OFFSET,
-                 -S, OFFSET, OFFSET,
-                 -S, OFFSET, S,
-                 -S, S, S);
-        quadFill(C[cubo.matrix[1][1][0].mid],
-                 -OFFSET, S, S,
-                 -S, S, S,
-                 -S, OFFSET, S,
-                 -OFFSET, OFFSET, S);
+        quadFill(C[cubo.matrix[1][1][0].left], -S, S, OFFSET, -OFFSET, S, OFFSET, -OFFSET, S, S, -S, S, S);
+        quadFill(C[cubo.matrix[1][1][0].right], -S, S, OFFSET, -S, OFFSET, OFFSET, -S, OFFSET, S, -S, S, S);
+        quadFill(C[cubo.matrix[1][1][0].mid], -OFFSET, S, S, -S, S, S, -S, OFFSET, S, -OFFSET, OFFSET, S);
     }
     else if (cubo.matrix[1][1][0].orientation == 1)
     {
-        quadFill(C[cubo.matrix[1][1][0].right],
-                 -S, S, OFFSET,
-                 -OFFSET, S, OFFSET,
-                 -OFFSET, S, S,
-                 -S, S, S);
-        quadFill(C[cubo.matrix[1][1][0].mid], // vermelho (frente)
-                 -S, S, OFFSET,
-                 -S, OFFSET, OFFSET,
-                 -S, OFFSET, S,
-                 -S, S, S);
-        quadFill(C[cubo.matrix[1][1][0].left],
-                 -OFFSET, S, S,
-                 -S, S, S,
-                 -S, OFFSET, S,
-                 -OFFSET, OFFSET, S);
+        quadFill(C[cubo.matrix[1][1][0].right], -S, S, OFFSET, -OFFSET, S, OFFSET, -OFFSET, S, S, -S, S, S);
+        quadFill(C[cubo.matrix[1][1][0].mid], -S, S, OFFSET, -S, OFFSET, OFFSET, -S, OFFSET, S, -S, S, S);
+        quadFill(C[cubo.matrix[1][1][0].left], -OFFSET, S, S, -S, S, S, -S, OFFSET, S, -OFFSET, OFFSET, S);
     }
     else
     {
-        quadFill(C[cubo.matrix[1][1][0].mid],
-                 -S, S, OFFSET,
-                 -OFFSET, S, OFFSET,
-                 -OFFSET, S, S,
-                 -S, S, S);
-        quadFill(C[cubo.matrix[1][1][0].left], // vermelho (frente)
-                 -S, S, OFFSET,
-                 -S, OFFSET, OFFSET,
-                 -S, OFFSET, S,
-                 -S, S, S);
-        quadFill(C[cubo.matrix[1][1][0].right],
-                 -OFFSET, S, S,
-                 -S, S, S,
-                 -S, OFFSET, S,
-                 -OFFSET, OFFSET, S);
+        quadFill(C[cubo.matrix[1][1][0].mid], -S, S, OFFSET, -OFFSET, S, OFFSET, -OFFSET, S, S, -S, S, S);
+        quadFill(C[cubo.matrix[1][1][0].left], -S, S, OFFSET, -S, OFFSET, OFFSET, -S, OFFSET, S, -S, S, S);
+        quadFill(C[cubo.matrix[1][1][0].right], -OFFSET, S, S, -S, S, S, -S, OFFSET, S, -OFFSET, OFFSET, S);
+    }
+
+    if (!overlay_message.empty())
+    {
+        // Salva as matrizes atuais
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        int viewport[4];
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        gluOrtho2D(0, viewport[2], 0, viewport[3]);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+
+        // Define cor do texto (vermelho)
+        glColor3f(1.0f, 0.0f, 0.0f);
+        // Posição: canto superior esquerdo
+        float x = 10.0f;
+        float y = viewport[3] - 30.0f;
+        glRasterPos2f(x, y);
+        for (const char *c = overlay_message.c_str(); *c != '\0'; ++c)
+        {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+        }
+
+        // Restaura as matrizes
+        glPopMatrix();
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
     }
 
     glutSwapBuffers();
@@ -577,25 +278,28 @@ void display()
 
 void specialKeysListener(int key, int, int)
 {
-    // if (key == GLUT_KEY_RIGHT) rotY += 5;
-    // else if (key == GLUT_KEY_LEFT) rotY -= 5;
-    // else if (key == GLUT_KEY_UP)   rotX += 5;
-    // else if (key == GLUT_KEY_DOWN) rotX -= 5;
     if (key == GLUT_KEY_RIGHT)
-    {
         rotY += 5;
-    }
     else if (key == GLUT_KEY_LEFT)
-    {
         rotY -= 5;
-    }
     else if (key == GLUT_KEY_UP)
-    {
         rotX += 5;
-    }
     else if (key == GLUT_KEY_DOWN)
-    {
         rotX -= 5;
+    glutPostRedisplay();
+}
+
+void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const std::vector<Solver::Node *> &path, long long duration_ms)
+{
+    if (achou)
+    {
+        overlay_message = "Caminho " + nome_algoritmo + ": ";
+        for (size_t i = 0; i < path.size(); ++i)
+        {
+            Solver::Node *node_path = path[i];
+            overlay_message += Solver::moviments_name[node_path->mov] + std::string(" -> ");
+        }
+        overlay_message += "\nTempo: " + std::to_string(duration_ms) + " ms";
     }
     glutPostRedisplay();
 }
@@ -610,57 +314,43 @@ void keyboardListener(unsigned char key, int, int)
         rotY = 0.0;
         glutPostRedisplay();
     } // reset
-    if (key == 'l')
+    if (key == 'l' || key == 'L' || key == 'u' || key == 'U' || key == 'f' || key == 'F')
     {
-        cubo = Move::L_FW(cubo);
+        if (key == 'l')
+            cubo = Move::L_FW(cubo);
+        if (key == 'L')
+            cubo = Move::L_BW(cubo);
+        if (key == 'f')
+            cubo = Move::F_FW(cubo);
+        if (key == 'F')
+            cubo = Move::F_BW(cubo);
+        if (key == 'u')
+            cubo = Move::U_FW(cubo);
+        if (key == 'U')
+            cubo = Move::U_BW(cubo);
+
         std::cout << "Mudou" << std::endl;
         glutPostRedisplay();
     }
-    else if (key == 'L')
+    std::vector<Solver::Node *> path;
+    if (key == 'b' || key == 'B')
     {
-        cubo = Move::L_BW(cubo);
-        std::cout << "Mudou" << std::endl;
-        glutPostRedisplay();
-    }
-    else if (key == 'u')
-    {
-        cubo = Move::U_FW(cubo);
-        std::cout << "Mudou" << std::endl;
-        glutPostRedisplay();
-    }
-    else if (key == 'U')
-    {
-        cubo = Move::U_BW(cubo);
-        std::cout << "Mudou" << std::endl;
-        glutPostRedisplay();
-    }
-    else if (key == 'f')
-    {
-        cubo = Move::F_FW(cubo);
-        std::cout << "Mudou" << std::endl;
-        glutPostRedisplay();
-    }
-    else if (key == 'F')
-    {
-        cubo = Move::F_BW(cubo);
-        std::cout << "Mudou" << std::endl;
-        glutPostRedisplay();
-    }
-    std::vector<Cube> path;
-    if(key == 'b' || key == 'B') {
+        auto start = std::chrono::high_resolution_clock::now();
         bool achou = solver.bfs(cubo, path);
-        if(achou) {
-            for (Cube cube_path : path) {
-                cubo = cube_path;
-            }
-        }
-        glutPostRedisplay();
-    } else if(key == 'd' || key == 'D') {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        showSolutionOverlay("BFS", achou, path, duration_ms);
+    }
+    else if (key == 'd' || key == 'D')
+    {
         solver.dfs(cubo, path);
-    } else if(key == 'a' || key == 'A') {
+    }
+    else if (key == 'a' || key == 'A')
+    {
         solver.A_star(cubo);
     }
-    if(key == 's' || key == 'S') {
+    if (key == 's' || key == 'S')
+    {
         cubo = cubo.shuffle(10, true);
         glutPostRedisplay();
     }

@@ -105,7 +105,7 @@ int main() {
     print(cubo);
     Hasher::init("./src/hashing.bin");
 
-    cubo = cubo.shuffle(2, true);
+    cubo = cubo.shuffle(15, true);
 
     cubo.print();
 
@@ -127,8 +127,8 @@ int main() {
     
     Solver solver;
     
-    vector<Cube> path;
-    solver.bfs(cubo, path);
+    // std::vector<Solver::Node*> path;
+    // solver.bfs(cubo, path);
     
     // std::cout << "teste" << Move::isInverse(1, 1) << endl;
     
