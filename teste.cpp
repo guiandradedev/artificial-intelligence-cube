@@ -8,6 +8,7 @@
 #include "Cube.h"
 #include "Move.h"
 #include "Solver.h"
+#include <vector>
 
 // MiniCube cube[2][2][2];
 Cube cubo;
@@ -645,10 +646,17 @@ void keyboardListener(unsigned char key, int, int)
         std::cout << "Mudou" << std::endl;
         glutPostRedisplay();
     }
+    std::vector<Cube> path;
     if(key == 'b' || key == 'B') {
-        solver.bfs(cubo);
+        bool achou = solver.bfs(cubo, path);
+        if(achou) {
+            for (Cube cube_path : path) {
+                cubo = cube_path;
+            }
+        }
+        glutPostRedisplay();
     } else if(key == 'd' || key == 'D') {
-        solver.dfs(cubo);
+        solver.dfs(cubo, path);
     } else if(key == 'a' || key == 'A') {
         solver.A_star(cubo);
     }

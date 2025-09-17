@@ -11,7 +11,7 @@ class DataStructure; // Declaracao antecipada
 class Solver
 {
 protected:
-    void algorithm(Cube cube, DataStructure &structure);
+    bool algorithm(Cube cube, DataStructure &structure, std::vector<Cube>& path);
 
 public:
     Solver();
@@ -43,8 +43,8 @@ public:
     static constexpr char moviments_name[6][4] = {"UFW", "UBW", "LFW", "LBW", "FFW", "FBW"};
 
     void A_star(Cube cube);
-    void bfs(Cube cube);
-    void dfs(Cube cube);
+    bool bfs(Cube cube, std::vector<Cube>& path);
+    bool dfs(Cube cube, std::vector<Cube>& path);
 };
 
 #endif

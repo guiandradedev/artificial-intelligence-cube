@@ -28,7 +28,7 @@ Solver::Solver()
     final_state.init();
 }
 
-void Solver::algorithm(Cube cube, DataStructure &structure)
+bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Cube>& path)
 {
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
@@ -47,7 +47,23 @@ void Solver::algorithm(Cube cube, DataStructure &structure)
         {
             cout << "Solucao encontrada na " << i << " iteracao!" << endl;
             final_move = state;
-            break;
+
+            cout << "Reconstrucao do cubo:" << endl;
+            int moves = 0;
+            while (final_move->root != nullptr)
+            {
+                cout << moviments_name[final_move->mov] << endl;
+                path.push_back(final_move->cube);
+                final_move = final_move->root;
+                moves++;
+            }
+
+            cout << "Com um total de " << moves << " movimentos." << endl;
+
+            reverse(path.begin(), path.end());
+
+            return true;
+            // break;
         }
 
         for (const auto &moviment : cube.moviments)
@@ -82,30 +98,21 @@ void Solver::algorithm(Cube cube, DataStructure &structure)
     auto end = high_resolution_clock::now();
     cout << "Tempo BFS: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
 
-    cout << "Reconstrucao do cubo:" << endl;
-    int moves = 0;
-    while (final_move->root != nullptr)
-    {
-        cout << moviments_name[final_move->mov] << endl;
-        final_move = final_move->root;
-        moves++;
-    }
-
-    cout << "Com um total de " << moves << " movimentos." << endl;
+    return false;
 }
 
-void Solver::bfs(Cube cube)
+bool Solver::bfs(Cube cube, std::vector<Cube>& path)
 {
     Queue queue_structure;
     cout << "Iniciando BFS..." << endl;
-    algorithm(cube, queue_structure);
+    return algorithm(cube, queue_structure, path);
 }
 
-void Solver::dfs(Cube cube)
+bool Solver::dfs(Cube cube, std::vector<Cube>& path)
 {
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;
-    algorithm(cube, stack_structure);
+    return algorithm(cube, stack_structure, path);
 }
 
 void Solver::A_star(Cube cube)

@@ -5,6 +5,7 @@
 #include "Solver.h"
 #include "MiniCube.h"
 #include "Hasher.h"
+#include "vector"
 
 using namespace std;
 
@@ -104,7 +105,7 @@ int main() {
     print(cubo);
     Hasher::init("./src/hashing.bin");
 
-    cubo = cubo.shuffle(15, true);
+    cubo = cubo.shuffle(2, true);
 
     cubo.print();
 
@@ -126,9 +127,8 @@ int main() {
     
     Solver solver;
     
-    
-    
-    solver.bfs(cubo);
+    vector<Cube> path;
+    solver.bfs(cubo, path);
     
     // std::cout << "teste" << Move::isInverse(1, 1) << endl;
     
