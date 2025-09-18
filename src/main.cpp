@@ -124,6 +124,7 @@ int main() {
     std::vector<short int> path;
     
     short int distance = Hasher::get_distance(cubo);
+    int num_tries;
 
     
     Solver solver;
@@ -135,7 +136,7 @@ int main() {
     
     std::cout << "hasher: " << distance << "movimentos" << std::endl;
 
-    solver.A_star(cubo, path);
+    solver.A_star(cubo, path, &num_tries);
     // solver.final_state.print();
     // solver.dfs(cubo);
 

@@ -29,7 +29,7 @@ Solver::Solver()
     final_state.init();
 }
 
-bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short int>& path)
+bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short int>& path, int* num_tries)
 {
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
@@ -48,6 +48,8 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short in
         {
             cout << "Solucao encontrada na " << i << " iteracao!" << endl;
             final_move = state;
+
+            *num_tries = i;
 
             cout << "Reconstrucao do cubo:" << endl;
             int moves = 0;
@@ -96,27 +98,28 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short in
         }
         i++;
     }
+    *num_tries = i;
     auto end = high_resolution_clock::now();
     cout << "Tempo BFS: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
 
     return false;
 }
 
-bool Solver::bfs(Cube cube, std::vector<short int> &path)
+bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     Queue queue_structure;
     cout << "Iniciando BFS..." << endl;
-    return algorithm(cube, queue_structure, path);
+    return algorithm(cube, queue_structure, path, num_tries);
 }
 
-bool Solver::dfs(Cube cube, std::vector<short int>& path)
+bool Solver::dfs(Cube cube, std::vector<short int>& path, int *num_tries)
 {
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;
-    return algorithm(cube, stack_structure, path);
+    return algorithm(cube, stack_structure, path, num_tries);
 }
 
-bool Solver::A_star(Cube cube, std::vector<short int>& path)
+bool Solver::A_star(Cube cube, std::vector<short int>& path, int *num_tries)
 {
     cout << "Iniciando A*: " << endl;
 
@@ -175,6 +178,8 @@ bool Solver::A_star(Cube cube, std::vector<short int>& path)
                 cout << moviments_name[move] << " ";
             }
             cout << endl;
+
+            *num_tries = predecessors.size();
 
             return true;
         }

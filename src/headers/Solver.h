@@ -42,12 +42,12 @@ public:
 
     static constexpr char moviments_name[6][4] = {"UFW", "UBW", "LFW", "LBW", "FFW", "FBW"};
 
-    bool A_star(Cube cube, std::vector<short int> &path);
-    bool bfs(Cube cube, std::vector<short int> &path);
-    bool dfs(Cube cube, std::vector<short int> &path);
+    bool A_star(Cube cube, std::vector<short int> &path, int *num_tries);
+    bool bfs(Cube cube, std::vector<short int> &path, int *num_tries);
+    bool dfs(Cube cube, std::vector<short int> &path, int *num_tries);
 
 protected:
-    bool algorithm(Cube cube, DataStructure &structure, std::vector<short int> &path);
+    bool algorithm(Cube cube, DataStructure &structure, std::vector<short int> &path, int *num_tries);
 };
 
 #endif

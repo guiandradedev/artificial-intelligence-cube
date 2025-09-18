@@ -38,6 +38,7 @@ const float S = 0.5f;                      // semi-tamanho do cubinho
 std::string path_message = "";
 std::string execution_time_message = "";
 std::string algoritm_message = "";
+std::string num_tries_message = "";
 
 void setupCube()
 {
@@ -85,6 +86,11 @@ void renderOverlay()
     if (!path_message.empty())
     {
         drawText(10.0f, y_pos, path_message, {1.0f, 0.0f, 0.0f}, GLUT_BITMAP_HELVETICA_18);
+        y_pos -= line_height; // Move a posição Y para a próxima linha
+    }
+    if (!num_tries_message.empty())
+    {
+        drawText(10.0f, y_pos, num_tries_message, {1.0f, 0.0f, 0.0f}, GLUT_BITMAP_HELVETICA_18);
     }
 
     // Desenha um texto de ajuda fixo
@@ -315,13 +321,14 @@ void specialKeysListener(int key, int, int)
     glutPostRedisplay();
 }
 
-void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const std::vector<short int> &path, long long duration_ms)
+void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const std::vector<short int> &path, long long duration_ms, int num_tries)
 {
     if (achou)
     {
         std::ostringstream oss;
         algoritm_message = "Caminho " + nome_algoritmo;
         execution_time_message = "Tempo de execucao: " + std::to_string(duration_ms) + " ms";
+        num_tries_message = "Numero de estados visitados: " + std::to_string(num_tries);
         if (!path.empty())
         {
             for (size_t i = 0; i < path.size() - 1; ++i)
@@ -370,29 +377,30 @@ void keyboardListener(unsigned char key, int, int)
         glutPostRedisplay();
     }
     std::vector<short int> path;
+    int num_tries;
     if (key == 'b' || key == 'B')
     {
         auto start = std::chrono::high_resolution_clock::now();
-        bool achou = solver.bfs(cubo, path);
+        bool achou = solver.bfs(cubo, path, &num_tries);
         auto end = std::chrono::high_resolution_clock::now();
         auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        showSolutionOverlay("BFS", achou, path, duration_ms);
+        showSolutionOverlay("BFS", achou, path, duration_ms, num_tries);
     }
     else if (key == 'd' || key == 'D')
     {
         auto start = std::chrono::high_resolution_clock::now();
-        bool achou = solver.dfs(cubo, path);
+        bool achou = solver.dfs(cubo, path, &num_tries);
         auto end = std::chrono::high_resolution_clock::now();
         auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        showSolutionOverlay("DFS", achou, path, duration_ms);
+        showSolutionOverlay("DFS", achou, path, duration_ms, num_tries);
     }
     else if (key == 'a' || key == 'A')
     {
         auto start = std::chrono::high_resolution_clock::now();
-        bool achou = solver.A_star(cubo, path);
+        bool achou = solver.A_star(cubo, path, &num_tries);
         auto end = std::chrono::high_resolution_clock::now();
         auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        showSolutionOverlay("A*", achou, path, duration_ms);
+        showSolutionOverlay("A*", achou, path, duration_ms, num_tries);
     }
     if (key == 's' || key == 'S')
     {
