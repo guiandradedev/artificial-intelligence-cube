@@ -88,7 +88,7 @@ void renderOverlay()
     }
 
     // Desenha um texto de ajuda fixo
-    std::string help_text = "Setas: Girar | s: Embaralhar | b: BFS | d: DFS | a: A* | r: Resetar Câmera | q: Sair";
+    std::string help_text = "Setas: Rotacionar Camera | s: Embaralhar | b: BFS | d: DFS | a: A* | r: Resetar Camera | q: Sair";
     drawText(10.0f, 10.0f, help_text, {0.2f, 0.2f, 0.2f}, GLUT_BITMAP_HELVETICA_12);
 
     // Restaura o ambiente 3D
@@ -297,39 +297,6 @@ void display()
         quadFill(C[cubo.matrix[1][1][0].left], -S, S, OFFSET, -S, OFFSET, OFFSET, -S, OFFSET, S, -S, S, S);
         quadFill(C[cubo.matrix[1][1][0].right], -OFFSET, S, S, -S, S, S, -S, OFFSET, S, -OFFSET, OFFSET, S);
     }
-
-    // if (!path_message.empty())
-    // {
-    //     // Salva as matrizes atuais
-    //     glMatrixMode(GL_PROJECTION);
-    //     glPushMatrix();
-    //     glLoadIdentity();
-    //     int viewport[4];
-    //     glGetIntegerv(GL_VIEWPORT, viewport);
-    //     gluOrtho2D(0, viewport[2], 0, viewport[3]);
-    //     glMatrixMode(GL_MODELVIEW);
-    //     glPushMatrix();
-    //     glLoadIdentity();
-    //     glDisable(GL_DEPTH_TEST);
-
-    //     // Define cor do texto (vermelho)
-    //     glColor3f(1.0f, 0.0f, 0.0f);
-    //     // Posição: canto superior esquerdo
-    //     float x = 10.0f;
-    //     float y = viewport[3] - 30.0f;
-    //     glRasterPos2f(x, y);
-    //     for (const char *c = path_message.c_str(); *c != '\0'; ++c)
-    //     {
-    //         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-    //     }
-
-    //     // Restaura as matrizes
-    //     glPopMatrix();
-    //     glMatrixMode(GL_PROJECTION);
-    //     glPopMatrix();
-    //     glMatrixMode(GL_MODELVIEW);
-    //     glEnable(GL_DEPTH_TEST);
-    // }
     renderOverlay();
 
     glutSwapBuffers();
@@ -413,11 +380,19 @@ void keyboardListener(unsigned char key, int, int)
     }
     else if (key == 'd' || key == 'D')
     {
-        solver.dfs(cubo, path);
+        auto start = std::chrono::high_resolution_clock::now();
+        bool achou = solver.dfs(cubo, path);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        showSolutionOverlay("DFS", achou, path, duration_ms);
     }
     else if (key == 'a' || key == 'A')
     {
-        solver.A_star(cubo, path);
+        auto start = std::chrono::high_resolution_clock::now();
+        bool achou = solver.A_star(cubo, path);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        showSolutionOverlay("A*", achou, path, duration_ms);
     }
     if (key == 's' || key == 'S')
     {
