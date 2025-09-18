@@ -15,6 +15,7 @@
 #include "Stack.h"
 #include "Hasher.h"
 #include <random>
+#include <algorithm>
 
 using namespace std::chrono;
 
@@ -28,7 +29,7 @@ Solver::Solver()
     final_state.init();
 }
 
-bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Node*>& path)
+bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short int>& path)
 {
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
@@ -53,7 +54,7 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Node*>& 
             while (final_move->root != nullptr)
             {
                 cout << moviments_name[final_move->mov] << endl;
-                path.push_back(final_move);
+                path.push_back(final_move->mov);
                 final_move = final_move->root;
                 moves++;
             }
@@ -101,21 +102,21 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<Node*>& 
     return false;
 }
 
-bool Solver::bfs(Cube cube, std::vector<Node*>& path)
+bool Solver::bfs(Cube cube, std::vector<short int> &path)
 {
     Queue queue_structure;
     cout << "Iniciando BFS..." << endl;
     return algorithm(cube, queue_structure, path);
 }
 
-bool Solver::dfs(Cube cube, std::vector<Node*>& path)
+bool Solver::dfs(Cube cube, std::vector<short int>& path)
 {
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;
     return algorithm(cube, stack_structure, path);
 }
 
-void Solver::A_star(Cube cube)
+bool Solver::A_star(Cube cube, std::vector<short int>& path)
 {
     cout << "Iniciando A*: " << endl;
 
@@ -131,7 +132,7 @@ void Solver::A_star(Cube cube)
     if (h_start == -1)
     {
         cout << "erro" << endl;
-        return;
+        return false;
     }
 
     queue.push({cube, g_start, g_start + h_start});
@@ -155,9 +156,6 @@ void Solver::A_star(Cube cube)
 
         if (current_node.cube == final_state)
         {
-            
-            vector<short int> path;
-
             Cube at = final_state;
             while (!(at == cube))
             {
@@ -178,7 +176,7 @@ void Solver::A_star(Cube cube)
             }
             cout << endl;
 
-            return;
+            return true;
         }
         
         for (const auto& moviment : cube.moviments)
@@ -203,4 +201,5 @@ void Solver::A_star(Cube cube)
         }
     }
     
+    return false;
 }

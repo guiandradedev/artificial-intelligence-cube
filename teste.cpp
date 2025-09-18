@@ -88,7 +88,7 @@ void renderOverlay()
     }
 
     // Desenha um texto de ajuda fixo
-    std::string help_text = "Setas: Girar | s: Embaralhar | b: BFS | d: DFS | a: A* | r: Resetar";
+    std::string help_text = "Setas: Girar | s: Embaralhar | b: BFS | d: DFS | a: A* | r: Resetar Câmera | q: Sair";
     drawText(10.0f, 10.0f, help_text, {0.2f, 0.2f, 0.2f}, GLUT_BITMAP_HELVETICA_12);
 
     // Restaura o ambiente 3D
@@ -348,7 +348,7 @@ void specialKeysListener(int key, int, int)
     glutPostRedisplay();
 }
 
-void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const std::vector<Solver::Node *> &path, long long duration_ms)
+void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const std::vector<short int> &path, long long duration_ms)
 {
     if (achou)
     {
@@ -359,9 +359,9 @@ void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const st
         {
             for (size_t i = 0; i < path.size() - 1; ++i)
             {
-                oss << Solver::moviments_name[path[i]->mov] << " -> ";
+                oss << Solver::moviments_name[path[i]] << " -> ";
             }
-            oss << Solver::moviments_name[path.back()->mov]; // Adiciona o último sem "->"
+            oss << Solver::moviments_name[path.back()]; // Adiciona o último sem "->"
         }
         path_message = oss.str();
     }
@@ -402,7 +402,7 @@ void keyboardListener(unsigned char key, int, int)
         std::cout << "Mudou" << std::endl;
         glutPostRedisplay();
     }
-    std::vector<Solver::Node *> path;
+    std::vector<short int> path;
     if (key == 'b' || key == 'B')
     {
         auto start = std::chrono::high_resolution_clock::now();
@@ -417,7 +417,7 @@ void keyboardListener(unsigned char key, int, int)
     }
     else if (key == 'a' || key == 'A')
     {
-        solver.A_star(cubo);
+        solver.A_star(cubo, path);
     }
     if (key == 's' || key == 'S')
     {

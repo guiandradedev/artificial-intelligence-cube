@@ -104,11 +104,11 @@ int main() {
     cout << "" << endl;
     print(cubo);
     Hasher::init("./src/hashing.bin");
-
+    
     cubo = cubo.shuffle(15, true);
-
+    
     cubo.print();
-
+    
     // cubo = Move::U_FW(cubo);
     // cubo = Move::L_FW(cubo);
     // cubo = Move::F_FW(cubo);
@@ -120,7 +120,8 @@ int main() {
     // cubo = Move::L_BW(cubo);
     // cubo = Move::L_BW(cubo);
     // cubo = Move::U_FW(cubo);
-
+    
+    std::vector<short int> path;
     
     short int distance = Hasher::get_distance(cubo);
 
@@ -134,7 +135,7 @@ int main() {
     
     std::cout << "hasher: " << distance << "movimentos" << std::endl;
 
-    solver.A_star(cubo);
+    solver.A_star(cubo, path);
     // solver.final_state.print();
     // solver.dfs(cubo);
 
