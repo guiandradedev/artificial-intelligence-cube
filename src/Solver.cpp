@@ -33,7 +33,43 @@ Solver::Solver()
     final_state.init();
 }
 
-bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short int> &path, int *num_tries)
+void sucessoraBaseCallback(Node *current_state, int moviment, DataStructure &structure, unordered_set<Cube> &visited)
+{
+    if (Move::isInverse(moviment, current_state->mov))
+        return;
+
+    if (current_state->root && current_state->root->mov == moviment && current_state->mov == moviment)
+        return;
+
+    if (current_state->mov == moviment && (moviment == 1 || moviment == 3 || moviment == 5))
+        return;
+
+    Cube next_cube = current_state->cube.applyMove(moviment);
+
+    if (visited.count(next_cube) == 0)
+    {
+        visited.insert(next_cube);
+
+        Node *next_node = new Node{next_cube, current_state, moviment};
+
+        structure.insert(next_node);
+    }
+}
+
+void podaBaseCallback(Node *current_state)
+{
+    // Qualquer remoção no começo
+}
+
+
+void sucessoraA_starCallback(Node *current_state, int moviment, DataStructure &structure, unordered_set<Cube> &visited)
+{
+    
+}
+
+
+// Make sure the signature matches the header file exactly
+bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short> &path, int *num_tries, SucessoraCallback sucessora, PodaCallback poda)
 {
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
@@ -47,6 +83,8 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short in
     while (!structure.isEmpty())
     {
         Node *state = structure.remove();
+
+        poda(state);
 
         if (state->cube == final_state)
         {
@@ -72,33 +110,9 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short in
             return true;
             // break;
         }
-
-        for (const auto &moviment : cube.moviments)
+        for (const auto &moviment : state->cube.moviments)
         {
-            // if(strcmp(Move::reverse_moves(moviment), state->mov) == 0) continue;
-
-            // std::cout << "Movimento: " << moviment << " na iteracao " << i << endl;
-
-            // Se for inverso do anterior, pula pro proximo
-            if (Move::isInverse(moviment, state->mov))
-                continue;
-
-            if (state->root && state->root->mov == moviment && state->mov == moviment)
-                continue;
-
-            if (state->mov == moviment && (moviment == 1 || moviment == 3 || moviment == 5))
-                continue;
-
-            Cube next_cube = state->cube.applyMove(moviment);
-
-            if (visited.count(next_cube) == 0)
-            {
-                visited.insert(next_cube);
-
-                Node *next_node = new Node{next_cube, state, moviment};
-
-                structure.insert(next_node);
-            }
+            sucessora(state, moviment, structure, visited);
         }
         i++;
     }
@@ -113,14 +127,14 @@ bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     Queue queue_structure;
     cout << "Iniciando BFS..." << endl;
-    return algorithm(cube, queue_structure, path, num_tries);
+    return algorithm(cube, queue_structure, path, num_tries, sucessoraBaseCallback, podaBaseCallback);
 }
 
 bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;
-    return algorithm(cube, stack_structure, path, num_tries);
+    return algorithm(cube, stack_structure, path, num_tries, sucessoraBaseCallback, podaBaseCallback);
 }
 
 bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries)
@@ -195,6 +209,7 @@ bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries)
 
         for (const auto &moviment : cube.moviments)
         {
+            // sucessoraA_starCallback(current_node, moviment, priorityQueue, )
             if (predecessors.count(current_node->cube) && Move::isInverse(moviment, predecessors[current_node->cube].second))
             {
                 continue;

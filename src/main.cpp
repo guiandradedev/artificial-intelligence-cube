@@ -130,7 +130,7 @@ int main() {
     
     Solver solver;
     
-    // solver.bfs(cubo, path, &num_tries);
+    solver.bfs(cubo, path, &num_tries);
 
     // cout << path.size();
     
@@ -146,7 +146,7 @@ int main() {
     
     // std::cout << "hasher: " << distance << "movimentos" << std::endl;
 
-    solver.A_star(cubo, path, &num_tries);
+    // solver.A_star(cubo, path, &num_tries);
     // solver.final_state.print();
     // solver.dfs(cubo);
 

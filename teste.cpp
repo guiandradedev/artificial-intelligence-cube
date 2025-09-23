@@ -1,6 +1,6 @@
 #include <cstdio>
 #define GL_GLEXT_PROTOTYPES
-#ifdef _APPLE_
+#if defined(__APPLE__) && defined(__MACH__)
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
