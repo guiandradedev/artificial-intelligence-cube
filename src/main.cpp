@@ -6,6 +6,7 @@
 #include "MiniCube.h"
 #include "Hasher.h"
 #include "vector"
+#include "Node.h"
 
 using namespace std;
 
@@ -105,7 +106,7 @@ int main() {
     print(cubo);
     Hasher::init("./src/hashing.bin");
     
-    cubo = cubo.shuffle(15, true);
+    cubo = cubo.shuffle(10, true);
     
     cubo.print();
     
@@ -123,18 +124,27 @@ int main() {
     
     std::vector<short int> path;
     
-    short int distance = Hasher::get_distance(cubo);
+    // short int distance = Hasher::get_distance(cubo);
     int num_tries;
 
     
     Solver solver;
     
-    // std::vector<Solver::Node*> path;
-    // solver.bfs(cubo, path);
+    // solver.bfs(cubo, path, &num_tries);
+
+    // cout << path.size();
     
+    // if (!path.empty())
+    // {
+    //     for (size_t i = 0; i < path.size() - 1; ++i)
+    //     {
+    //         cout << Solver::moviments_name[path[i]] << " -> ";
+    //     }
+    //     cout << Solver::moviments_name[path.back()]; // Adiciona o último sem "->"
+    // }
     // std::cout << "teste" << Move::isInverse(1, 1) << endl;
     
-    std::cout << "hasher: " << distance << "movimentos" << std::endl;
+    // std::cout << "hasher: " << distance << "movimentos" << std::endl;
 
     solver.A_star(cubo, path, &num_tries);
     // solver.final_state.print();

@@ -1,14 +1,15 @@
 #include "Stack.h"
+#include "Node.h"
 
-void Stack::insert(Solver::Node* node) {
+void Stack::insert(Node* node) {
     stack.push(node);
 }
 
-Solver::Node* Stack::remove() {
+Node* Stack::remove() {
     if (stack.empty()) {
         return nullptr;
     }
-    Solver::Node* topNode = stack.top();
+    Node* topNode = stack.top();
     stack.pop();
     return topNode;
 }

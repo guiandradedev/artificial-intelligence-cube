@@ -16,6 +16,10 @@
 #include "Hasher.h"
 #include <random>
 #include <algorithm>
+#include "Node.h"
+#include "AstarNode.h"
+#include "PriorityQueue.h"
+#include <queue>
 
 using namespace std::chrono;
 
@@ -29,7 +33,7 @@ Solver::Solver()
     final_state.init();
 }
 
-bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short int>& path, int* num_tries)
+bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short int> &path, int *num_tries)
 {
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
@@ -112,52 +116,57 @@ bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
     return algorithm(cube, queue_structure, path, num_tries);
 }
 
-bool Solver::dfs(Cube cube, std::vector<short int>& path, int *num_tries)
+bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     Stack stack_structure;
     cout << "Iniciando DFS..." << endl;
     return algorithm(cube, stack_structure, path, num_tries);
 }
 
-bool Solver::A_star(Cube cube, std::vector<short int>& path, int *num_tries)
+bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries)
 {
+    auto start = high_resolution_clock::now();
     cout << "Iniciando A*: " << endl;
 
-    auto start = high_resolution_clock::now();
-
-    priority_queue<AstarNode, vector<AstarNode>, greater<AstarNode>> queue;
+    PriorityQueue priorityQueue;
+    // priority_queue<AstarNode, vector<AstarNode>, greater<AstarNode>> queue;
+    // priority_queue<AstarNode, vector<AstarNode>, greater<AstarNode>> queue;
 
     unordered_map<Cube, pair<Cube, short int>> predecessors;
     unordered_map<Cube, int> g_costs;
 
     int g_start = 0;
-    int h_start = Hasher::get_distance(cube) + rand()%4 ;
+    int h_start = Hasher::get_distance(cube) + rand() % 4;
     if (h_start == -1)
     {
         cout << "erro" << endl;
         return false;
     }
 
-    queue.push({cube, g_start, g_start + h_start});
+    AstarNode *root = new AstarNode{cube, nullptr, -1, g_start, g_start + h_start};
+    // AstarNode root{cube, g_start, g_start + h_start};
+
+    priorityQueue.insert(root);
+    // queue.push({cube, g_start, g_start + h_start});
     g_costs[cube] = g_start;
     predecessors[cube] = {cube, -1};
 
-    Node* final_node = nullptr;
+    Node *final_node = nullptr;
     int iterations = 0;
-
-    while (!queue.empty())
+    while (!priorityQueue.isEmpty())
     {
-        AstarNode current_node = queue.top();
+        AstarNode *current_node = priorityQueue.remove();
 
-        queue.pop();
+        // AstarNode *current_node = queue.top();
+        // queue.pop();
         iterations++;
 
-        if(current_node.g_cost > g_costs[current_node.cube])
+        if (current_node->g_cost > g_costs[current_node->cube])
         {
             continue;
         }
 
-        if (current_node.cube == final_state)
+        if (current_node->cube == final_state)
         {
             Cube at = final_state;
             while (!(at == cube))
@@ -173,7 +182,7 @@ bool Solver::A_star(Cube cube, std::vector<short int>& path, int *num_tries)
             cout << "Tempo A*: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
             cout << "Solucao (" << path.size() << " movimentos): ";
 
-            for(short int move : path) 
+            for (short int move : path)
             {
                 cout << moviments_name[move] << " ";
             }
@@ -183,28 +192,28 @@ bool Solver::A_star(Cube cube, std::vector<short int>& path, int *num_tries)
 
             return true;
         }
-        
-        for (const auto& moviment : cube.moviments)
+
+        for (const auto &moviment : cube.moviments)
         {
-            if (predecessors.count(current_node.cube) && Move::isInverse(moviment, predecessors[current_node.cube].second))
+            if (predecessors.count(current_node->cube) && Move::isInverse(moviment, predecessors[current_node->cube].second))
             {
                 continue;
             }
 
-            Cube next_cube = current_node.cube.applyMove(moviment);
-            int new_g_cost = current_node.g_cost +1;
+            Cube next_cube = current_node->cube.applyMove(moviment);
+            int new_g_cost = current_node->g_cost + 1;
 
-            if (g_costs.find(next_cube) == g_costs.end() || new_g_cost < g_costs[next_cube]) {
+            if (g_costs.find(next_cube) == g_costs.end() || new_g_cost < g_costs[next_cube])
+            {
                 g_costs[next_cube] = new_g_cost;
-                predecessors[next_cube] = {current_node.cube, moviment};
-                
-                int h_cost = Hasher::get_distance(next_cube) + rand()%4;
+                predecessors[next_cube] = {current_node->cube, moviment};
+
+                int h_cost = Hasher::get_distance(next_cube) + rand() % 4;
                 int f_cost = new_g_cost + h_cost;
-                
-                queue.push({next_cube, new_g_cost, f_cost});
+
+                priorityQueue.insert(new AstarNode{next_cube, current_node, moviment, new_g_cost, f_cost});
             }
         }
     }
-    
     return false;
 }

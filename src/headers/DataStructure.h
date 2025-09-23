@@ -2,6 +2,7 @@
 
 #include "Cube.h"
 #include "Solver.h"
+#include "Node.h"
 
 class DataStructure {
 protected:
@@ -10,8 +11,8 @@ protected:
 public:
     virtual ~DataStructure() = default;
 
-    virtual void insert(Solver::Node* node) = 0; 
-    virtual Solver::Node* remove() = 0; 
+    virtual void insert(Node* node) = 0; 
+    virtual Node* remove() = 0; 
     virtual bool isEmpty() const = 0;
 
 };

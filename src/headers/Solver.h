@@ -13,26 +13,20 @@ class Solver
 
 public:
     Solver();
-    struct Node
-    {
-        Cube cube;
-        Node *root;
-        short int mov; // Movimento que gerou esse estado
-    };
 
     Cube final_state;
 
-    struct AstarNode
-    {
-        Cube cube;
-        int g_cost; // custo para chegar
-        int f_cost; // f = g + h, custo total
+    // struct AstarNode
+    // {
+    //     Cube cube;
+    //     int g_cost; // custo para chegar
+    //     int f_cost; // f = g + h, custo total
 
-        bool operator>(const AstarNode &other) const
-        {
-            return f_cost > other.f_cost;
-        }
-    };
+    //     bool operator>(const AstarNode &other) const
+    //     {
+    //         return f_cost > other.f_cost;
+    //     }
+    // };
 
     /*
        UFW = 0, UBW = 1,
