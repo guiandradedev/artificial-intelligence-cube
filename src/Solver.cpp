@@ -34,7 +34,7 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
     {
         cout << "Solucao encontrada na " << i << " iteracao!" << endl;
 
-        *num_tries = i;
+        *num_tries += i;
 
         cout << "Reconstrucao do cubo:" << endl;
         int moves = 0;
@@ -56,10 +56,22 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
     return false;
 }
 
+void Solver::cleanup_memory(std::vector<Node*>& all_nodes, DataStructure* structure) {
+    cout << "Limpando memoria... " << all_nodes.size() << " nos e a estrutura de dados." << endl;
+    delete structure; 
+    for (Node* node : all_nodes) {
+        delete node; 
+    }
+}
+
+
 bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short> &path, int *num_tries)
 {
     Node* root = strategy.create_root_node(cube);
     DataStructure* structure = strategy.create_data_structure();
+
+    std::vector<Node*> all_nodes;
+    all_nodes.push_back(root);
 
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
@@ -77,18 +89,21 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
             continue;
         }
 
-        if (is_final_state(state, path, i, num_tries))
+        if (is_final_state(state, path, i, num_tries)) {
+            cleanup_memory(all_nodes, structure);
             return true;
+        }
 
         for (const auto &moviment : state->cube.moviments)
         {
-            strategy.sucessora(state, moviment, *structure, visited);
+            strategy.sucessora(state, moviment, *structure, visited, all_nodes);
         }
         i++;
     }
-    *num_tries = i;
+    *num_tries += i;
     auto end = high_resolution_clock::now();
     cout << "Tempo Execução: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
+    cleanup_memory(all_nodes, structure);
 
     return false;
 }
@@ -102,9 +117,21 @@ bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 
 bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
-    DFSStrategy strategy;
+    int strategy_max_depth = 25;
+    *num_tries = 0;
     cout << "Iniciando DFS..." << endl;
-    return algorithm(strategy, cube, path, num_tries);
+
+    for(int max_depth = 1; max_depth <= strategy_max_depth; max_depth++) {
+        cout << max_depth << endl;
+        DFSStrategy strategy;
+        strategy.max_depth = max_depth;
+        if (algorithm(strategy, cube, path, num_tries)) {
+            return true;
+        }
+
+    }
+    return false;
+    // return algorithm(strategy, cube, path, num_tries);
 }
 
 bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries)

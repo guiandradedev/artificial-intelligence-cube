@@ -24,10 +24,9 @@ bool DFSStrategy::poda(Node *current_state)
         return false;
     }
     return false;
-
 }
 
-void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructure &structure, std::unordered_set<Cube> &visited)
+void DFSStrategy::sucessora(Node *current_state, short moviment, DataStructure &structure, std::unordered_set<Cube> &visited, std::vector<Node*>& all_nodes)
 {
     if (DFSNode *stated_casted = dynamic_cast<DFSNode *>(current_state))
     {
@@ -42,9 +41,15 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
 
         Cube next_cube = stated_casted->cube.applyMove(moviment);
 
-        DFSNode *next_node = new DFSNode{next_cube, stated_casted, moviment, stated_casted->depth + 1};
+        if (visited.count(next_cube) == 0) {
+            visited.insert(next_cube);
+            
+            DFSNode *next_node = new DFSNode{next_cube, stated_casted, moviment, stated_casted->depth + 1};
 
-        structure.insert(next_node);
+            all_nodes.push_back(next_node);
+            
+            structure.insert(next_node);
+        }
     }
 }
 

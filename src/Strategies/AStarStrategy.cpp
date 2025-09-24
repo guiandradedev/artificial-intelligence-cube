@@ -24,7 +24,7 @@ bool AStarStrategy::poda(Node *current_state)
     return false;
 }
 
-void AStarStrategy::sucessora(Node *current_state, short int moviment, DataStructure &structure, std::unordered_set<Cube> &visited)
+void AStarStrategy::sucessora(Node *current_state, short int moviment, DataStructure &structure, std::unordered_set<Cube> &visited, std::vector<Node*>& all_nodes)
 {
     if (AstarNode *stated_casted = dynamic_cast<AstarNode *>(current_state))
     {
@@ -40,8 +40,11 @@ void AStarStrategy::sucessora(Node *current_state, short int moviment, DataStruc
             int h_cost = Hasher::get_distance(next_cube);
             int f_cost = new_g_cost + h_cost;
 
-            structure.insert(
-                new AstarNode{next_cube, stated_casted, moviment, new_g_cost, f_cost});
+            AstarNode* node = new AstarNode{next_cube, stated_casted, moviment, new_g_cost, f_cost};
+
+            all_nodes.push_back(node);
+
+            structure.insert(node);
         }
     }
 }

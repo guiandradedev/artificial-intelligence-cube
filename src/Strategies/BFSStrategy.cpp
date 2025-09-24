@@ -16,7 +16,7 @@ bool BFSStrategy::poda(Node *current_state)
     return false;
 }
 
-void BFSStrategy::sucessora(Node *current_state, short moviment, DataStructure &structure, std::unordered_set<Cube> &visited)
+void BFSStrategy::sucessora(Node *current_state, short moviment, DataStructure &structure, std::unordered_set<Cube> &visited, std::vector<Node*>& all_nodes)
 {
     if (Move::isInverse(moviment, current_state->mov))
         return;
@@ -36,6 +36,8 @@ void BFSStrategy::sucessora(Node *current_state, short moviment, DataStructure &
         visited.insert(next_cube);
 
         Node *next_node = new Node{next_cube, current_state, moviment};
+
+        all_nodes.push_back(next_node);
 
         structure.insert(next_node);
     }
