@@ -4,7 +4,7 @@
 #include "DataStructure/DataStructure.h"  
 #include "DataStructure/Stack.h"  
 #include "Node/Node.h"
-#include "Node/AstarNode.h"        
+#include "Node/DFSNode.h"     
 #include "Hasher.h"   
 #include "Cube/Move.h"    
 

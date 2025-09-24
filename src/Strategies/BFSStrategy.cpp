@@ -3,8 +3,7 @@
 #include "Strategies/AlgorithmStrategy.h"
 #include "DataStructure/DataStructure.h"  
 #include "DataStructure/Queue.h"  
-#include "Node/Node.h"
-#include "Node/AstarNode.h"        
+#include "Node/Node.h"    
 #include "Hasher.h"   
 #include "Cube/Move.h"    
 

@@ -2,7 +2,6 @@
 #include "Cube/Cube.h"
 #include <queue>
 #include <vector>
-#include <stack>
 #include "Cube/Move.h"
 #include <set>
 #include <iostream>
@@ -11,14 +10,10 @@
 #include <chrono>
 #include <cstring>
 #include "DataStructure/DataStructure.h"
-#include "DataStructure/Queue.h"
-#include "DataStructure/Stack.h"
 #include "Hasher.h"
 #include <random>
 #include <algorithm>
 #include "Node/Node.h"
-#include "Node/AstarNode.h"
-#include "DataStructure/PriorityQueue.h"
 #include <queue>
 #include "Strategies/AlgorithmStrategy.h"
 #include "Strategies/AStarStrategy.h"
@@ -115,6 +110,6 @@ bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     AStarStrategy strategy;
-    cout << "Iniciando DFS..." << endl;
+    cout << "Iniciando A*..." << endl;
     return algorithm(strategy, cube, path, num_tries);
 }
