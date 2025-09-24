@@ -5,6 +5,7 @@ class DFSStrategy : public AlgorithmStrategy
 {
 public:
     DFSStrategy();
+    int max_depth = 14;
     bool poda(Node *state) override;
     void sucessora(Node *current_state, short int moviment, DataStructure &structure, std::unordered_set<Cube> &visited) override;
 

@@ -1,11 +1,11 @@
-#include <unordered_set>    
+#include <unordered_set>
 #include "Strategies/BFSStrategy.h"
 #include "Strategies/AlgorithmStrategy.h"
-#include "DataStructure/DataStructure.h"  
-#include "DataStructure/Queue.h"  
-#include "Node/Node.h"    
-#include "Hasher.h"   
-#include "Cube/Move.h"    
+#include "DataStructure/DataStructure.h"
+#include "DataStructure/Queue.h"
+#include "Node/Node.h"
+#include "Hasher.h"
+#include "Cube/Move.h"
 
 BFSStrategy::BFSStrategy()
 {
@@ -21,9 +21,11 @@ void BFSStrategy::sucessora(Node *current_state, short moviment, DataStructure &
     if (Move::isInverse(moviment, current_state->mov))
         return;
 
+    // Impede 3 rotacoes iguais
     if (current_state->root && current_state->root->mov == moviment && current_state->mov == moviment)
         return;
 
+    // Impede duas rotacoes anti horarias iguais em sequencia
     if (current_state->mov == moviment && (moviment == 1 || moviment == 3 || moviment == 5))
         return;
 
@@ -39,10 +41,12 @@ void BFSStrategy::sucessora(Node *current_state, short moviment, DataStructure &
     }
 }
 
-Node* BFSStrategy::create_root_node(Cube &cube) {
+Node *BFSStrategy::create_root_node(Cube &cube)
+{
     Node *root = new Node{cube, nullptr, -1};
     return root;
 }
-DataStructure* BFSStrategy::create_data_structure() {
+DataStructure *BFSStrategy::create_data_structure()
+{
     return new Queue();
 }

@@ -102,7 +102,7 @@ bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 
 bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
-    BFSStrategy strategy;
+    DFSStrategy strategy;
     cout << "Iniciando DFS..." << endl;
     return algorithm(strategy, cube, path, num_tries);
 }
