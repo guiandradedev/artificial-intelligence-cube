@@ -103,12 +103,12 @@ int main() {
     cubo.init();
     cubo.print();
     cout << "" << endl;
-    print(cubo);
+    // print(cubo);
     Hasher::init("./src/hashing.bin");
     
     cubo = cubo.shuffle(10, true);
     
-    cubo.print();
+    // cubo.print();
     
     // cubo = Move::U_FW(cubo);
     // cubo = Move::L_FW(cubo);
@@ -130,7 +130,8 @@ int main() {
     
     Solver solver;
     
-    solver.bfs(cubo, path, &num_tries);
+    // solver.bfs(cubo, path, &num_tries);
+    solver.dfs(cubo, path, &num_tries);
 
     // cout << path.size();
     

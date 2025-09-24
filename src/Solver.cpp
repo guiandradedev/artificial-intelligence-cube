@@ -40,7 +40,7 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
         int moves = 0;
         while (current_state->root != nullptr)
         {
-            cout << moviments_name[current_state->mov] << endl;
+            // cout << moviments_name[current_state->mov] << endl;
             path.push_back(current_state->mov);
             current_state = current_state->root;
             moves++;
@@ -78,6 +78,7 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
     int i = 0;
 
     structure->insert(root);
+    int j = 0;
     visited.insert(root->cube);
 
     while (!structure->isEmpty())
@@ -91,15 +92,18 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
 
         if (is_final_state(state, path, i, num_tries)) {
             cleanup_memory(all_nodes, structure);
+            // cout << "Linha " << j << endl;
             return true;
         }
 
         for (const auto &moviment : state->cube.moviments)
         {
+            j++;
             strategy.sucessora(state, moviment, *structure, visited, all_nodes);
         }
         i++;
     }
+    // cout << "Linha " << j << endl;
     *num_tries += i;
     auto end = high_resolution_clock::now();
     cout << "Tempo Execução: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
@@ -117,7 +121,7 @@ bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 
 bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
-    int strategy_max_depth = 25;
+    int strategy_max_depth = 14;
     *num_tries = 0;
     cout << "Iniciando DFS..." << endl;
 
