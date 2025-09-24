@@ -1,5 +1,5 @@
-#include "Queue.h"
-#include "Node.h"
+#include "DataStructure/Queue.h"
+#include "Node/Node.h"
 
 void Queue::insert(Node* node) {
     queue.push(node);

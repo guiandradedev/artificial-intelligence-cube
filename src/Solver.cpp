@@ -1,29 +1,29 @@
 #include "Solver.h"
-#include "Cube.h"
+#include "Cube/Cube.h"
 #include <queue>
 #include <vector>
 #include <stack>
-#include "Move.h"
+#include "Cube/Move.h"
 #include <set>
 #include <iostream>
 #include <unordered_set>
 #include <unordered_map>
 #include <chrono>
 #include <cstring>
-#include "DataStructure.h"
-#include "Queue.h"
-#include "Stack.h"
+#include "DataStructure/DataStructure.h"
+#include "DataStructure/Queue.h"
+#include "DataStructure/Stack.h"
 #include "Hasher.h"
 #include <random>
 #include <algorithm>
-#include "Node.h"
-#include "AstarNode.h"
-#include "PriorityQueue.h"
+#include "Node/Node.h"
+#include "Node/AstarNode.h"
+#include "DataStructure/PriorityQueue.h"
 #include <queue>
-#include "AlgorithmStrategy.h"
-#include "AStarStrategy.h"
-#include "DFSStrategy.h"
-#include "BFSStrategy.h"
+#include "Strategies/AlgorithmStrategy.h"
+#include "Strategies/AStarStrategy.h"
+#include "Strategies/DFSStrategy.h"
+#include "Strategies/BFSStrategy.h"
 using namespace std::chrono;
 
 using namespace std;
@@ -61,18 +61,21 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
     return false;
 }
 
-bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short> &path, int *num_tries, Node *root, AlgorithmStrategy &strategy)
+bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short> &path, int *num_tries)
 {
+    Node* root = strategy.create_root_node(cube);
+    DataStructure* structure = strategy.create_data_structure();
+
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
     int i = 0;
 
-    structure.insert(root);
+    structure->insert(root);
     visited.insert(root->cube);
 
-    while (!structure.isEmpty())
+    while (!structure->isEmpty())
     {
-        Node *state = structure.remove();
+        Node *state = structure->remove();
 
         if (strategy.poda(state))
         {
@@ -84,7 +87,7 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short> &
 
         for (const auto &moviment : state->cube.moviments)
         {
-            strategy.sucessora(state, moviment, structure, visited);
+            strategy.sucessora(state, moviment, *structure, visited);
         }
         i++;
     }
@@ -97,39 +100,21 @@ bool Solver::algorithm(Cube cube, DataStructure &structure, std::vector<short> &
 
 bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
-    Queue queue_structure;
     BFSStrategy strategy;
-    Node *root = new Node{cube, nullptr, -1};
     cout << "Iniciando BFS..." << endl;
-    return algorithm(cube, queue_structure, path, num_tries, root, strategy);
+    return algorithm(strategy, cube, path, num_tries);
 }
 
 bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
-    Stack stack_structure;
     BFSStrategy strategy;
-    Node *root = new Node{cube, nullptr, -1};
     cout << "Iniciando DFS..." << endl;
-    return algorithm(cube, stack_structure, path, num_tries, root, strategy);
+    return algorithm(strategy, cube, path, num_tries);
 }
 
 bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     AStarStrategy strategy;
-
-    int g_start = 0;
-    int h_start = Hasher::get_distance(cube);
-    if (h_start == -1)
-    {
-        cout << "erro" << endl;
-        return false;
-    }
-
-    strategy.g_costs[cube] = g_start;
-
-    PriorityQueue priorityQueue;
-
-    AstarNode *root = new AstarNode{cube, nullptr, -1, g_start, g_start + h_start};
     cout << "Iniciando DFS..." << endl;
-    return algorithm(cube, priorityQueue, path, num_tries, root, strategy);
+    return algorithm(strategy, cube, path, num_tries);
 }

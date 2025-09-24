@@ -1,8 +1,7 @@
-#ifndef HASHER_H
-#define HASHER_H
+#pragma once
 
 #include <unordered_map>
-#include <Cube.h>
+#include "Cube/Cube.h"
 
 class Hasher
 {
@@ -20,5 +19,3 @@ public:
 
     static size_t countStoredStates();
 };
-
-#endif // HASHER_H

@@ -1,7 +1,4 @@
-#include "Node.h"
-#include <iostream>
-
-using namespace std;
+#include "Node/Node.h"
 
 Node::Node() : cube(), root(nullptr), mov(0) {}
 

@@ -1,13 +1,10 @@
-#ifndef SOLVER_H
-#define SOLVER_H
-
 #pragma once
 #include <vector>
-#include "Cube.h"
+#include "Cube/Cube.h"
 #include <functional>
-#include "Node.h"
 #include <unordered_set> 
 
+class Node;
 class DataStructure;
 class AlgorithmStrategy;
 
@@ -28,7 +25,5 @@ public:
 
 protected:
     bool is_final_state(Node* current_state, std::vector<short int> &path, int i, int *num_tries);
-    bool algorithm(Cube cube, DataStructure &structure, std::vector<short int> &path, int *num_tries, Node *root, AlgorithmStrategy &strategy);
+    bool algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short> &path, int *num_tries);
 };
-
-#endif

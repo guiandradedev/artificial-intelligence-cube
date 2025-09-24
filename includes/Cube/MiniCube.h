@@ -1,19 +1,15 @@
-// MiniCube.h
-#ifndef MINICUBE_H
-#define MINICUBE_H
+#pragma once
 
 class MiniCube {
 public:
     int left;
     int right;
     int mid;
-    // char name[4];
     int index;
     short int orientation;
 
     MiniCube();
     MiniCube(int l, int r, int t, short int orientation, int index); 
-    // MiniCube(char n[4], int l, int r, int t, short int orientation); 
     MiniCube clone() const;
     void print();
 
@@ -25,5 +21,3 @@ public:
         return left != other.left || right != other.right || mid != other.mid || orientation != other.orientation;
     }
 };
-
-#endif

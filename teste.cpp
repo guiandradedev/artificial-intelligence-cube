@@ -5,8 +5,8 @@
 #else
 #include <GL/glut.h>
 #endif
-#include "Cube.h"
-#include "Move.h"
+#include "Cube/Cube.h"
+#include "Cube/Move.h"
 #include "Solver.h"
 #include <vector>
 #include "Hasher.h"

@@ -1,11 +1,12 @@
-#include "AlgorithmStrategy.h"
-#include "Node.h"
-#include "Hasher.h"
-#include <unordered_map>
-#include "Node.h"
-#include "DataStructure.h"
-#include "DFSStrategy.h"
-#include "Move.h"
+#include <unordered_set>    
+#include "Strategies/DFSStrategy.h"
+#include "Strategies/AlgorithmStrategy.h"
+#include "DataStructure/DataStructure.h"  
+#include "DataStructure/Stack.h"  
+#include "Node/Node.h"
+#include "Node/AstarNode.h"        
+#include "Hasher.h"   
+#include "Cube/Move.h"    
 
 DFSStrategy::DFSStrategy()
 {
@@ -13,6 +14,8 @@ DFSStrategy::DFSStrategy()
 
 bool DFSStrategy::poda(Node *current_state)
 {
+    // False: continua o loop
+    // True: para o loop e vai pra proxima iteracao
     return false;
 }
 
@@ -37,4 +40,13 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
 
         structure.insert(next_node);
     }
+}
+
+Node* DFSStrategy::create_root_node(Cube &cube) {
+    Node *root = new Node{cube, nullptr, -1};
+    return root;
+}
+
+DataStructure* DFSStrategy::create_data_structure() {
+    return new Stack();
 }

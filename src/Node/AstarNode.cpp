@@ -1,4 +1,4 @@
-#include "AstarNode.h"
+#include "Node/AstarNode.h"
 
 AstarNode::AstarNode() : Node(), g_cost(0), f_cost(0) {}
 

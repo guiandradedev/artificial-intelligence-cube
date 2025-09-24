@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Cube.h"
+#include "Cube/Cube.h"
 
 namespace Move {
 

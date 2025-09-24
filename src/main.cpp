@@ -1,12 +1,12 @@
-#include "Cube.h"
+#include "Cube/Cube.h"
 #include <iostream>
 #include <random>
-#include "Move.h"
+#include "Cube/Move.h"
 #include "Solver.h"
-#include "MiniCube.h"
+#include "Cube/MiniCube.h"
 #include "Hasher.h"
 #include "vector"
-#include "Node.h"
+#include "Node/Node.h"
 
 using namespace std;
 

@@ -1,10 +1,11 @@
-#include "AStarStrategy.h"
-#include "AlgorithmStrategy.h"
-#include "AstarNode.h"        
-#include "Hasher.h"           
 #include <unordered_set>    
-#include "Node.h"
-#include "DataStructure.h"  
+#include "Strategies/AStarStrategy.h"
+#include "Strategies/AlgorithmStrategy.h"
+#include "DataStructure/DataStructure.h"  
+#include "DataStructure/PriorityQueue.h"  
+#include "Node/Node.h"
+#include "Node/AstarNode.h"        
+#include "Hasher.h"           
 
 AStarStrategy::AStarStrategy()
 {
@@ -43,4 +44,22 @@ void AStarStrategy::sucessora(Node *current_state, short int moviment, DataStruc
                 new AstarNode{next_cube, stated_casted, moviment, new_g_cost, f_cost});
         }
     }
+}
+
+Node* AStarStrategy::create_root_node(Cube &cube) {
+    int g_start = 0;
+    int h_start = Hasher::get_distance(cube);
+    if (h_start == -1)
+    {
+        std::cout << "erro" << std::endl;
+        throw std::runtime_error("Invalid Hash");
+    }
+
+    g_costs[cube] = g_start;
+
+    AstarNode *root = new AstarNode{cube, nullptr, -1, g_start, g_start + h_start};
+    return root;
+}
+DataStructure* AStarStrategy::create_data_structure() {
+    return new PriorityQueue();
 }

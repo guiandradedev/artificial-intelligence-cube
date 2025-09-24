@@ -1,5 +1,5 @@
-#include "Stack.h"
-#include "Node.h"
+#include "DataStructure/Stack.h"
+#include "Node/Node.h"
 
 void Stack::insert(Node* node) {
     stack.push(node);

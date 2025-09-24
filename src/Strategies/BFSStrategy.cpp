@@ -1,11 +1,12 @@
-#include "AlgorithmStrategy.h"
-#include "Node.h"
-#include "Hasher.h"
-#include <unordered_map>
-#include "Node.h"
-#include "DataStructure.h"
-#include "BFSStrategy.h"
-#include "Move.h"
+#include <unordered_set>    
+#include "Strategies/BFSStrategy.h"
+#include "Strategies/AlgorithmStrategy.h"
+#include "DataStructure/DataStructure.h"  
+#include "DataStructure/Queue.h"  
+#include "Node/Node.h"
+#include "Node/AstarNode.h"        
+#include "Hasher.h"   
+#include "Cube/Move.h"    
 
 BFSStrategy::BFSStrategy()
 {
@@ -37,4 +38,12 @@ void BFSStrategy::sucessora(Node *current_state, short moviment, DataStructure &
 
         structure.insert(next_node);
     }
+}
+
+Node* BFSStrategy::create_root_node(Cube &cube) {
+    Node *root = new Node{cube, nullptr, -1};
+    return root;
+}
+DataStructure* BFSStrategy::create_data_structure() {
+    return new Queue();
 }
