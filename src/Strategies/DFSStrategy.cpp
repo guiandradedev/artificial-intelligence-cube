@@ -19,7 +19,7 @@ bool DFSStrategy::poda(Node *current_state)
     if (DFSNode *stated_casted = dynamic_cast<DFSNode *>(current_state))
     {   
         if(stated_casted->depth >= max_depth) {
-            stated_casted->cube.print();
+            // stated_casted->cube.print();
             return true;
         }
         return false;
@@ -42,15 +42,17 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
 
         Cube next_cube = stated_casted->cube.applyMove(moviment);
 
-        if (visited.count(next_cube) == 0) {
-            visited.insert(next_cube);
+        // if (visited.count(next_cube) == 0) {
+
+            std::cout << "Profundidade: " << stated_casted->depth + 1 << std::endl;
+            // visited.insert(next_cube);
             
             DFSNode *next_node = new DFSNode{next_cube, stated_casted, moviment, stated_casted->depth + 1};
 
             all_nodes.push_back(next_node);
             
             structure.insert(next_node);
-        }
+        // }
     }
 }
 

@@ -40,7 +40,7 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
         int moves = 0;
         while (current_state->root != nullptr)
         {
-            // cout << moviments_name[current_state->mov] << endl;
+            cout << moviments_name[current_state->mov] << endl;
             path.push_back(current_state->mov);
             current_state = current_state->root;
             moves++;
@@ -85,15 +85,15 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
     {
         Node *state = structure->remove();
 
-        if (strategy.poda(state))
-        {
-            continue;
-        }
-
         if (is_final_state(state, path, i, num_tries)) {
             cleanup_memory(all_nodes, structure);
             // cout << "Linha " << j << endl;
             return true;
+        }
+
+        if (strategy.poda(state))
+        {
+            continue;
         }
 
         for (const auto &moviment : state->cube.moviments)
