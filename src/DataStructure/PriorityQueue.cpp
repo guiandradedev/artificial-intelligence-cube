@@ -13,16 +13,15 @@ void PriorityQueue::insert(Node* node) {
             if (AstarNode* parent = dynamic_cast<AstarNode*>(f->root)) {
                 g = parent->g_cost + 1;
             } else {
-                g = 1; // fallback if root is not an AstarNode
+                g = 1;
             }
         }
         int h = Hasher::get_distance(node->cube);
         int z = g + h;
 
-        // Assuming pq is std::priority_queue<AstarNode*, ...>
         f->g_cost = g;
         f->f_cost = z;
-        pq.push(f); // Push the object, not the pointer
+        pq.push(f);
     } else {
         std::cout << "errorororororo" << std::endl;
     }

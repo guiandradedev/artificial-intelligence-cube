@@ -8,7 +8,7 @@
 #include <chrono>
 
 // comando para compilar: g++ ./DatabaseGenerator.cpp ./src/Cube.cpp ./src/Move.cpp ./src/MiniCube.cpp -I ./src/headers/ -std=c++17 -o2 -o generate_db
-// g++ ./DatabaseGenerator.cpp ./src/Cube/Cube.cpp ./src/Cube/Move.cpp ./src/Cube/MiniCube.cpp -I ./includes/ -std=c++17 -o2 -o generate_db
+// g++ ./tools/DatabaseGenerator.cpp ./src/Cube/Cube.cpp ./src/Cube/Move.cpp ./src/Cube/MiniCube.cpp -I ./includes/ -std=c++17 -o2 -o generate_db
 int main()
 {
     auto start_time = std::chrono::high_resolution_clock::now();
