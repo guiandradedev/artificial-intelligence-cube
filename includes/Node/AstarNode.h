@@ -11,7 +11,6 @@ public:
     AstarNode();
     AstarNode(const Cube &cube, Node *root, short int mov, int g_cost, int f_cost);
 
-    // Para uso em priority_queue (menor f_cost tem prioridade)
     bool operator>(const AstarNode &other) const
     {
         return f_cost > other.f_cost;

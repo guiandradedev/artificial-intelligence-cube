@@ -5,7 +5,6 @@
 
 namespace Move
 {
-
     Cube U_FW(const Cube &cube)
     {
         Cube newCube = cube.cloneMatrix();

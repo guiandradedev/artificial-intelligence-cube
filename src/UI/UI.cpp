@@ -9,7 +9,6 @@
 #include "Cube/Move.h"
 #include "Solver.h"
 #include <vector>
-#include "Hasher.h"
 #include <string>
 #include <chrono>
 #include <sstream>
@@ -30,7 +29,6 @@ UI::UI(int argc, char **argv, std::string window_title, int width, int height)
     glClearColor(0.9f, 0.9f, 0.9f, 1.f);
 
     cubo.init();
-    Hasher::init("./src/hashing.bin");
 
     // Registra os callbacks estáticos
     glutDisplayFunc(UI::displayCallback);

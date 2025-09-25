@@ -19,6 +19,7 @@
 #include "Strategies/AStarStrategy.h"
 #include "Strategies/DFSStrategy.h"
 #include "Strategies/BFSStrategy.h"
+#include "Hasher.h"
 using namespace std::chrono;
 
 using namespace std;
@@ -26,6 +27,7 @@ using namespace std;
 Solver::Solver()
 {
     final_state.init();
+    Hasher::init("./src/hashing.bin");
 }
 
 bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, int i, int *num_tries)

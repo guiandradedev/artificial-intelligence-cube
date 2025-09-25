@@ -5,7 +5,7 @@
 
 class DataStructure
 {
-    // Interface de Classe Abstrata
+// Classe Abstrata
 public:
     virtual ~DataStructure() = default;
 

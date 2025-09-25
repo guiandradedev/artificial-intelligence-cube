@@ -14,20 +14,7 @@ public:
     Cube cloneMatrix() const;
     MiniCube matrix[2][2][2];
 
-    enum class MoveType : short int {
-        UFW = 0, UBW = 1,
-        LFW = 2, LBW = 3,
-        FFW = 4, FBW = 5
-    };
-
-    short int moviments[6] = {
-        static_cast<short int>(MoveType::UFW),
-        static_cast<short int>(MoveType::UBW),
-        static_cast<short int>(MoveType::LFW),
-        static_cast<short int>(MoveType::LBW),
-        static_cast<short int>(MoveType::FFW),
-        static_cast<short int>(MoveType::FBW)
-    };
+    short int moviments[6] = {0, 1, 2, 3, 4, 5};
     /* 
        UFW = 0, UBW = 1,
        LFW = 2, LBW = 3,

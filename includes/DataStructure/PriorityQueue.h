@@ -27,7 +27,6 @@ class PriorityQueue : public DataStructure
 {
 private:
     std::priority_queue<AstarNode *, std::vector<AstarNode *>, CompareNodes> pq;
-    // std::priority_queue<AstarNode, std::vector<AstarNode>, std::greater<AstarNode>> pq;
     std::unordered_map<Cube, int> g_costs;
     Cube start;
 
