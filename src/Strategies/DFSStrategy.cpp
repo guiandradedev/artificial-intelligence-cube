@@ -49,15 +49,9 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
         if (Move::isInverse(moviment, stated_casted->mov))
             return;
 
-        if (stated_casted->root && stated_casted->root->mov == moviment && stated_casted->mov == moviment)
-            return;
-
-        if (stated_casted->mov == moviment && (moviment == 1 || moviment == 3 || moviment == 5))
-            return;
-
         Cube next_cube = stated_casted->cube.applyMove(moviment);
 
-        if (!isAncestor(stated_casted, next_cube))
+        if (visited.find(next_cube) == visited.end())
         {
             std::cout << "Profundidade: " << stated_casted->depth + 1 << std::endl;
 
@@ -66,6 +60,7 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
             all_nodes.push_back(next_node);
 
             structure.insert(next_node);
+            visited.insert(next_cube);
         }
     }
 }
