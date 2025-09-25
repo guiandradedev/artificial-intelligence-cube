@@ -2,7 +2,7 @@
 
 struct RGB
 {
-    float r, g, b;
+    float r, g, b, oppacity;
 };
 
 extern const RGB CubeColors[6];

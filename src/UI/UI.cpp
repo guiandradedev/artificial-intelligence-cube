@@ -17,16 +17,17 @@
 // Inicializa o ponteiro estático
 UI *UI::instance = nullptr;
 
-UI::UI(int argc, char **argv, std::string window_title, int width, int height)
+UI::UI(int argc, char **argv, UIDetails details)
 {
     instance = this; // Armazena a instância atual para os callbacks estáticos
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(width, height);
-    glutCreateWindow(window_title.c_str());
+    glutInitWindowSize(details.width, details.height);
+    glutCreateWindow(details.window_title.c_str());
     glEnable(GL_DEPTH_TEST);
-    glClearColor(0.9f, 0.9f, 0.9f, 1.f);
+    // glClearColor(0.9f, 0.9f, 0.9f, 1.f);
+    glClearColor(details.color.r, details.color.g, details.color.b, details.color.oppacity);
 
     cubo.init();
 

@@ -8,7 +8,13 @@
 class UI
 {
 public:
-    UI(int argc, char **argv, std::string window_title, int width, int height);
+    struct UIDetails {
+        std::string window_title;
+        int width;
+        int height;
+        RGB color;
+    };
+    UI(int argc, char **argv, UIDetails details);
     void run();
 
 private:
