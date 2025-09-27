@@ -5,6 +5,7 @@
 #include "DataStructure/PriorityQueue.h"  
 #include "Node/Node.h"
 #include "Node/AstarNode.h"        
+#include <random>
 #include "Hasher.h"           
 
 AStarStrategy::AStarStrategy()
@@ -37,7 +38,7 @@ void AStarStrategy::sucessora(Node *current_state, short int moviment, DataStruc
             g_costs[next_cube] = new_g_cost;
             visited.insert(next_cube);
 
-            int h_cost = Hasher::get_distance(next_cube);
+            int h_cost = Hasher::get_distance(next_cube) + return_noise(noise);
             int f_cost = new_g_cost + h_cost;
 
             AstarNode* node = new AstarNode{next_cube, stated_casted, moviment, new_g_cost, f_cost};
@@ -49,9 +50,16 @@ void AStarStrategy::sucessora(Node *current_state, short int moviment, DataStruc
     }
 }
 
+int AStarStrategy::return_noise(int noise) {
+    // // Se for gerar um rúido entre -noise e +noise
+    // int noise_value = (std::rand() % (2 * noise + 1)) - noise;
+    // return noise_value
+    return std::rand() % noise;
+}
+
 Node* AStarStrategy::create_root_node(Cube &cube) {
     int g_start = 0;
-    int h_start = Hasher::get_distance(cube);
+    int h_start = Hasher::get_distance(cube) + return_noise(noise);
     if (h_start == -1)
     {
         std::cout << "erro" << std::endl;
@@ -65,4 +73,14 @@ Node* AStarStrategy::create_root_node(Cube &cube) {
 }
 DataStructure* AStarStrategy::create_data_structure() {
     return new PriorityQueue();
+}
+
+void AStarStrategy::setNoise(int n) {
+    // // Valor do ruído funciona em módulo, -noise a +noise, logo noise >= 0
+    // if(n >= 0) {
+    //     noise = n;
+    //     return;
+    // }
+    // throw std::invalid_argument("Noise must be greather or equal 0");
+    noise = n;
 }
