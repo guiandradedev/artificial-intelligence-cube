@@ -36,7 +36,7 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
     {
         // cout << "Solucao encontrada na " << i << " iteracao!" << endl;
 
-        *num_tries += i;
+        *num_tries = i;
 
         // cout << "Reconstrucao do cubo:" << endl;
         int moves = 0;
@@ -106,7 +106,7 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
         i++;
     }
     // cout << "Linha " << j << endl;
-    *num_tries += i;
+    *num_tries = i;
     auto end = high_resolution_clock::now();
     // cout << "Tempo Execução: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
     cleanup_memory(all_nodes, structure);

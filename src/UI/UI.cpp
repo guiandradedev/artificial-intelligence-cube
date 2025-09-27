@@ -131,7 +131,7 @@ void UI::keyboardListener(unsigned char key, int x, int y)
         glutPostRedisplay();
     }
     std::vector<short int> path;
-    int num_tries;
+    int num_tries = 0;
     if (key == 'b' || key == 'B')
     {
         auto start = std::chrono::high_resolution_clock::now();
