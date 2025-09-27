@@ -128,7 +128,7 @@ bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
     // cout << "Iniciando DFS..." << endl;
 
     for(int max_depth = 1; max_depth <= strategy_max_depth; max_depth++) {
-        cout << max_depth << endl;
+        // cout << max_depth << endl;
         DFSStrategy strategy;
         strategy.max_depth = max_depth;
         if (algorithm(strategy, cube, path, num_tries)) {

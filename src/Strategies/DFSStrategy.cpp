@@ -53,7 +53,7 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
 
         if (visited.find(next_cube) == visited.end())
         {
-            std::cout << "Profundidade: " << stated_casted->depth + 1 << std::endl;
+            // std::cout << "Profundidade: " << stated_casted->depth + 1 << std::endl;
 
             DFSNode *next_node = new DFSNode{next_cube, stated_casted, moviment, stated_casted->depth + 1};
 
