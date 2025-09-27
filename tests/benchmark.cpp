@@ -31,7 +31,7 @@ int main() {
          << setw(12) << "A* States" << endl;
     cout << string(88, '-') << endl;
 
-    int shuffle_max = 15;
+    int shuffle_max = 16;
 
     std::vector<short int> path;
     int num_tries = 0;
