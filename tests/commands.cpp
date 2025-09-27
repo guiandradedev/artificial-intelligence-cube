@@ -8,7 +8,7 @@
 
 using namespace std;
 
-// Linux: g++ tests/commands.cpp $(find src -name "*.cpp" | grep -v "src/main.cpp") -I ./includes -o test_runner && ./test_runner
+// Linux: g++ tests/commands.cpp $(find src -name "*.cpp" | grep -v "src/main.cpp" | grep -v "src/UI/") -I ./includes -o test_runner && ./test_runner
 
 int main() {
     srand(time(NULL));
@@ -38,7 +38,7 @@ int main() {
                 break;
             case 'a':
             case 'A':
-                solver.A_star(cubo, path, &num_tries);
+                solver.A_star(cubo, path, &num_tries, -1);
                 break;
             case 'b':
             case 'B':

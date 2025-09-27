@@ -34,21 +34,21 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
 {
     if (current_state->cube == final_state)
     {
-        cout << "Solucao encontrada na " << i << " iteracao!" << endl;
+        // cout << "Solucao encontrada na " << i << " iteracao!" << endl;
 
         *num_tries += i;
 
-        cout << "Reconstrucao do cubo:" << endl;
+        // cout << "Reconstrucao do cubo:" << endl;
         int moves = 0;
         while (current_state->root != nullptr)
         {
-            cout << moviments_name[current_state->mov] << endl;
+            // cout << moviments_name[current_state->mov] << endl;
             path.push_back(current_state->mov);
             current_state = current_state->root;
             moves++;
         }
 
-        cout << "Com um total de " << moves << " movimentos." << endl;
+        // cout << "Com um total de " << moves << " movimentos." << endl;
 
         reverse(path.begin(), path.end());
 
@@ -59,7 +59,7 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
 }
 
 void Solver::cleanup_memory(std::vector<Node*>& all_nodes, DataStructure* structure) {
-    cout << "Limpando memoria... " << all_nodes.size() << " nos e a estrutura de dados." << endl;
+    // cout << "Limpando memoria... " << all_nodes.size() << " nos e a estrutura de dados." << endl;
     delete structure; 
     for (Node* node : all_nodes) {
         delete node; 
@@ -108,7 +108,7 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
     // cout << "Linha " << j << endl;
     *num_tries += i;
     auto end = high_resolution_clock::now();
-    cout << "Tempo Execução: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
+    // cout << "Tempo Execução: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
     cleanup_memory(all_nodes, structure);
 
     return false;
@@ -117,7 +117,7 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
 bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     BFSStrategy strategy;
-    cout << "Iniciando BFS..." << endl;
+    // cout << "Iniciando BFS..." << endl;
     return algorithm(strategy, cube, path, num_tries);
 }
 
@@ -125,7 +125,7 @@ bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
     int strategy_max_depth = 14;
     *num_tries = 0;
-    cout << "Iniciando DFS..." << endl;
+    // cout << "Iniciando DFS..." << endl;
 
     for(int max_depth = 1; max_depth <= strategy_max_depth; max_depth++) {
         cout << max_depth << endl;
@@ -140,9 +140,10 @@ bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
     // return algorithm(strategy, cube, path, num_tries);
 }
 
-bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries)
+bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries, int noise)
 {
     AStarStrategy strategy;
-    cout << "Iniciando A*..." << endl;
+    strategy.setNoise(noise);
+    // cout << "Iniciando A*..." << endl;
     return algorithm(strategy, cube, path, num_tries);
 }

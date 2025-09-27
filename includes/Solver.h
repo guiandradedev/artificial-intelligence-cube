@@ -16,7 +16,7 @@ public:
 
     static constexpr char moviments_name[6][4] = {"UFW", "UBW", "LFW", "LBW", "FFW", "FBW"};
 
-    bool A_star(Cube cube, std::vector<short int> &path, int *num_tries);
+    bool A_star(Cube cube, std::vector<short int> &path, int *num_tries, int noise);
     bool bfs(Cube cube, std::vector<short int> &path, int *num_tries);
     bool dfs(Cube cube, std::vector<short int> &path, int *num_tries);
 

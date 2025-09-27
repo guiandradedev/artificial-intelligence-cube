@@ -77,10 +77,12 @@ DataStructure* AStarStrategy::create_data_structure() {
 
 void AStarStrategy::setNoise(int n) {
     // // Valor do ruído funciona em módulo, -noise a +noise, logo noise >= 0
-    // if(n >= 0) {
-    //     noise = n;
-    //     return;
-    // }
-    // throw std::invalid_argument("Noise must be greather or equal 0");
-    noise = n;
+    if(n >= 0) {
+        noise = n;
+        return;
+    } else if(n == -1) {
+        // Caso o valor seja -1 significa que não houve mudanca mas a funcão foi chamada na rotina
+        return;
+    }
+    throw std::invalid_argument("Noise must be greather or equal 0");
 }

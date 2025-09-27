@@ -151,7 +151,7 @@ void UI::keyboardListener(unsigned char key, int x, int y)
     else if (key == 'a' || key == 'A')
     {
         auto start = std::chrono::high_resolution_clock::now();
-        bool achou = solver.A_star(cubo, path, &num_tries);
+        bool achou = solver.A_star(cubo, path, &num_tries, -1);
         auto end = std::chrono::high_resolution_clock::now();
         auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         showSolutionOverlay("A*", achou, path, duration_ms, num_tries);

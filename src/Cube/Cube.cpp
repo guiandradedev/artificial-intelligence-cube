@@ -121,7 +121,9 @@ Cube Cube::shuffle(int moves, bool print) const {
             cout << Solver::moviments_name[functionIndex] << " - ";
         }
     }
-    cout << endl;
+    if(print) {
+        cout << endl;
+    }
 
     return newCube;
 }
