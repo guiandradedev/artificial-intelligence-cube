@@ -39,13 +39,13 @@ bool Solver::is_final_state(Node *current_state, std::vector<short int> &path, i
         *num_tries = i;
 
         // cout << "Reconstrucao do cubo:" << endl;
-        int moves = 0;
+        // int moves = 0;
         while (current_state->root != nullptr)
         {
             // cout << moviments_name[current_state->mov] << endl;
             path.push_back(current_state->mov);
             current_state = current_state->root;
-            moves++;
+            // moves++;
         }
 
         // cout << "Com um total de " << moves << " movimentos." << endl;
