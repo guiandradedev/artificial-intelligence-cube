@@ -46,22 +46,20 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
 {
     if (DFSNode *stated_casted = dynamic_cast<DFSNode *>(current_state))
     {
-        if (Move::isInverse(moviment, stated_casted->mov))
-            return;
+        //if (Move::isInverse(moviment, stated_casted->mov))
+            //return;
 
         Cube next_cube = stated_casted->cube.applyMove(moviment);
 
-        if (visited.find(next_cube) == visited.end())
-        {
-            // std::cout << "Profundidade: " << stated_casted->depth + 1 << std::endl;
-
+        // A MUDANÇA CRÍTICA QUE CORRIGE A FALHA:
+        // Em vez de checar o 'visited' global, cheque apenas por ancestrais no caminho atual.
+        //if (!isAncestor(stated_casted, next_cube))
+        //{
             DFSNode *next_node = new DFSNode{next_cube, stated_casted, moviment, stated_casted->depth + 1};
-
             all_nodes.push_back(next_node);
-
             structure.insert(next_node);
-            visited.insert(next_cube);
-        }
+            // Não usamos mais o visited.insert(next_cube) para o DFS.
+        //}
     }
 }
 

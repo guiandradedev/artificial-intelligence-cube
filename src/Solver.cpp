@@ -77,7 +77,7 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
 
     unordered_set<Cube> visited;
     auto start = high_resolution_clock::now();
-    int i = 0;
+    int i =-1;
 
     structure->insert(root);
     int j = 0;
@@ -85,11 +85,15 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
 
     while (!structure->isEmpty())
     {
+        
+        i++;
+        std::cout << "\nLINHA:" << i;
+        
         Node *state = structure->remove();
 
         if (is_final_state(state, path, i, num_tries)) {
             cleanup_memory(all_nodes, structure);
-            // cout << "Linha " << j << endl;
+            std::cout << "\nLinha estado final " << i << endl;
             return true;
         }
 
@@ -103,9 +107,17 @@ bool Solver::algorithm(AlgorithmStrategy &strategy, Cube cube, std::vector<short
             j++;
             strategy.sucessora(state, moviment, *structure, visited, all_nodes);
         }
-        i++;
+
     }
     // cout << "Linha " << j << endl;
+
+    if(structure->isEmpty())
+    {
+        std::cout<<"\nESVAZIOU A ESTRUTURA!";
+    }
+
+    std::cout<<"\nchegou";
+
     *num_tries = i;
     auto end = high_resolution_clock::now();
     // cout << "Tempo Execução: " << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
@@ -123,21 +135,33 @@ bool Solver::bfs(Cube cube, std::vector<short int> &path, int *num_tries)
 
 bool Solver::dfs(Cube cube, std::vector<short int> &path, int *num_tries)
 {
-    int strategy_max_depth = 14;
+   int max_search_depth = 20; // Limite para não ficar em loop infinito
     *num_tries = 0;
-    // cout << "Iniciando DFS..." << endl;
+    std::cout << "Iniciando DFS com Aprofundamento Iterativo..." << std::endl;
 
-    for(int max_depth = 1; max_depth <= strategy_max_depth; max_depth++) {
-        // cout << max_depth << endl;
+    // Este loop é a implementação do IDDFS
+    for (int current_max_depth = 1; current_max_depth <= max_search_depth; current_max_depth++)
+    {
+        std::cout << "\nTentando com profundidade maxima: " << current_max_depth;
+        
+        // A estratégia é recriada a cada iteração, resetando a busca
         DFSStrategy strategy;
-        strategy.max_depth = max_depth;
-        if (algorithm(strategy, cube, path, num_tries)) {
-            return true;
+        strategy.max_depth = current_max_depth;
+        
+        int iteration_tries = 0;
+
+        // Chama o algoritmo para a profundidade atual
+        if (algorithm(strategy, cube, path, &iteration_tries)) {
+            *num_tries += iteration_tries;
+            std::cout << "\nSolucao encontrada na profundidade " << current_max_depth << "!" << std::endl;
+            return true; // Encontrou? PARA TUDO e retorna a solução.
         }
 
+        *num_tries += iteration_tries; // Acumula tentativas se não encontrou
     }
+
+    std::cout << "\nSolucao nao encontrada dentro do limite de profundidade." << std::endl;
     return false;
-    // return algorithm(strategy, cube, path, num_tries);
 }
 
 bool Solver::A_star(Cube cube, std::vector<short int> &path, int *num_tries, int noise)
