@@ -1,4 +1,3 @@
-// MiniCube.cpp
 #include "Cube/MiniCube.h"
 #include <cstring>
 #include <iostream>

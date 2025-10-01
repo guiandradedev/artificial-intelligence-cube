@@ -206,9 +206,9 @@ void UI::showSolutionOverlay(const std::string &nome_algoritmo, bool achou, cons
         {
             for (size_t i = 0; i < path.size() - 1; ++i)
             {
-                oss << Solver::moviments_name[path[i]] << " -> ";
+                oss << moviments_name[path[i]] << " -> ";
             }
-            oss << Solver::moviments_name[path.back()]; // Adiciona o último sem "->"
+            oss << moviments_name[path.back()]; // Adiciona o último sem "->"
         }
         path_message = oss.str();
     }

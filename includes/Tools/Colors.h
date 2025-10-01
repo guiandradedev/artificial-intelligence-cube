@@ -2,7 +2,7 @@
 #include <string>
 
 namespace Colors {
-    // Cores apenas para imprimir no terminal
+    //Cores apenas para imprimir no terminal
     extern const char* HEADER;
     extern const char* OKBLUE;
     extern const char* OKCYAN;

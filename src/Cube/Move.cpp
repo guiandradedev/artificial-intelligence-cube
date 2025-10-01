@@ -29,7 +29,6 @@ namespace Move
         return newCube;
     }
 
-    // L_FW estava correto.
     Cube L_FW(const Cube &cube)
     {
         Cube newCube = cube.cloneMatrix();
@@ -81,11 +80,6 @@ namespace Move
         return newCube;
     }
 
-    // x - tras | frente
-    // y - esquerda | direita
-    // z - cima | baixo
-
-    // F_BW CORRIGIDO
     Cube F_BW(const Cube &cube)
     {
         Cube newCube = cube.cloneMatrix();
@@ -102,25 +96,6 @@ namespace Move
 
         return newCube;
     }
-
-    // const char* reverse_moves(const char* key) {
-    //     // TODO Adicionar hash
-    //     if (strcmp(key, "UFW") == 0) {
-    //         return "UBW";
-    //     } else if (strcmp(key, "UBW") == 0) {
-    //         return "UFW";
-    //     } else if (strcmp(key, "LFW") == 0) {
-    //         return "LBW";
-    //     } else if (strcmp(key, "LBW") == 0) {
-    //         return "LFW";
-    //     } else if (strcmp(key, "FBW") == 0) {
-    //         return "FFW";
-    //     } else if (strcmp(key, "FFW") == 0) {
-    //         return "FBW";
-    //     } else {
-    //         return nullptr;
-    //     }
-    // }
 
     const bool isInverse(short int move1, short int move2)
     {
