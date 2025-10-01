@@ -4,6 +4,7 @@
 
 // Linux: g++ $(find src -name "*.cpp") -I ./includes -o programa -lGL -lGLU -lglut && ./programa
 
+// U, L, U, F, U, F, L, U, L, L, U, L, U, L, U, L, U
 int main(int argc, char** argv) {
     header(true);
 

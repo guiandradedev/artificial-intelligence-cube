@@ -28,20 +28,6 @@ bool DFSStrategy::poda(Node *current_state)
     return false;
 }
 
-bool DFSStrategy::isAncestor(Node *currentNode, const Cube &targetCube)
-{
-    Node *ancestor = currentNode;
-    while (ancestor != nullptr)
-    {
-        if (ancestor->cube == targetCube)
-        {
-            return true;
-        }
-        ancestor = ancestor->root;
-    }
-    return false;
-}
-
 void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructure &structure, std::unordered_set<Cube> &visited, std::vector<Node *> &all_nodes)
 {
     if (DFSNode *stated_casted = dynamic_cast<DFSNode *>(current_state))
@@ -49,10 +35,18 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
         if (Move::isInverse(moviment, stated_casted->mov))
             return;
 
+        // Impede 3 rotacoes iguais
+        if (current_state->root && current_state->root->mov == moviment && current_state->mov == moviment)
+            return;
+
+        // Impede duas rotacoes anti horarias iguais em sequencia
+        if (current_state->mov == moviment && (moviment == 1 || moviment == 3 || moviment == 5))
+            return;
+
         Cube next_cube = stated_casted->cube.applyMove(moviment);
 
-        if (visited.find(next_cube) == visited.end())
-        {
+        // if (visited.find(next_cube) == visited.end())
+        // {
             // std::cout << "Profundidade: " << stated_casted->depth + 1 << std::endl;
 
             DFSNode *next_node = new DFSNode{next_cube, stated_casted, moviment, stated_casted->depth + 1};
@@ -61,7 +55,7 @@ void DFSStrategy::sucessora(Node *current_state, short int moviment, DataStructu
 
             structure.insert(next_node);
             visited.insert(next_cube);
-        }
+        // }
     }
 }
 

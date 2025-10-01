@@ -12,7 +12,4 @@ public:
     Node *create_root_node(Cube &cube) override;
     DataStructure *create_data_structure() override;
     
-private:
-    bool isAncestor(Node *currentNode, const Cube &targetCube);
-    
 };
