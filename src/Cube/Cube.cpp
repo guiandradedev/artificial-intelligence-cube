@@ -1,10 +1,12 @@
-#include "Cube.h"
 #include <map>
 #include <array>
 #include <string>
 #include <vector>
-#include "Move.h"
+#include <functional>
 #include <cstring>
+#include "Solver.h"
+#include "Cube/Move.h"
+#include "Cube/Cube.h"
 using namespace std;
 
 Cube::Cube() {}
@@ -13,14 +15,14 @@ void Cube::init()
 {
 
     int colors[8][3] = {
-        {4, 2, 0}, // manteu
-        {4, 2, 1}, // manteu
-        {3, 4, 0}, // manteu
-        {3, 4, 1}, // manteu
+        {4, 2, 0}, 
+        {2, 4, 1}, 
+        {3, 4, 0}, 
+        {4, 3, 1}, 
         {2, 5, 0},
-        {2, 5, 1},
+        {5, 2, 1},
         {5, 3, 0},
-        {5, 3, 1}
+        {3, 5, 1}
     };
     // 0 amarelo
     // 1 branco
@@ -39,12 +41,6 @@ void Cube::init()
             {
                 int index = x * 4 + y * 2 + z;
                 matrix[x][y][z] = MiniCube(colors[index][0], colors[index][1], colors[index][2], 0, index);
-
-                // char name[4];
-                // snprintf(name, sizeof(name), "%d%d%d", x, y, z);
-                
-                // matrix[x][y][z] = MiniCube(name, colors[index][0], colors[index][1], colors[index][2], 0);
-            
             }
         }
     }
@@ -60,7 +56,6 @@ void Cube::print() const
             {
                 const MiniCube &cube = matrix[x][y][z];
                 std::cout 
-                        //   << cube.name << " "
                           << "Cubinho" << cube.index << " (" 
                           << x << " " << y << " " << z << ") "
                           << cube.left << " "
@@ -87,16 +82,18 @@ Cube Cube::cloneMatrix() const {
     return newCube;
 }
 
-Cube Cube::applyMove(const char mov[4]) const {
-    // TODO Adicionar hash
-    if (strcmp(mov, "UFW") == 0) return Move::U_FW(*this);
-    if (strcmp(mov, "UBW") == 0) return Move::U_BW(*this);
-    if (strcmp(mov, "LFW") == 0) return Move::L_FW(*this);
-    if (strcmp(mov, "LBW") == 0) return Move::L_BW(*this);
-    if (strcmp(mov, "FBW") == 0) return Move::F_BW(*this);
-    if (strcmp(mov, "FFW") == 0) return Move::F_FW(*this);
 
-    return *this;
+static const std::vector<std::function<Cube(const Cube&)>> movefunctios = {
+    Move::U_FW, // 0
+    Move::U_BW, // 1
+    Move::L_FW, // 2
+    Move::L_BW, // 3
+    Move::F_FW, // 4
+    Move::F_BW  // 5
+}; 
+
+Cube Cube::applyMove(short int mov) const {
+    return movefunctios[mov](*this);
 }
 
 Cube Cube::shuffle(int moves, bool print) const {
@@ -106,18 +103,26 @@ Cube Cube::shuffle(int moves, bool print) const {
     if(print) {
         cout << "Movimentos: " << endl;
     }
+    short int last_move = -1;
+
     for (int i = 0; i < moves; i++) {
         int functionIndex = rand() % functions_possible;
+
+        if(Move::isInverse(functionIndex, last_move)){
+            i--;
+            continue;
+        }
+        last_move = functionIndex;
+
         newCube = newCube.applyMove(moviments[functionIndex]);
+
         if(print) {
-            cout << moviments[functionIndex] << " - ";
+            cout << Solver::moviments_name[functionIndex] << " - ";
         }
     }
-    cout << endl;
+    if(print) {
+        cout << endl;
+    }
 
     return newCube;
-}
-
-MiniCube Cube::position(int x, int y, int z) {
-    return matrix[x][y][z];
 }

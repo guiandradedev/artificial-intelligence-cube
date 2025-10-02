@@ -1,14 +1,15 @@
-#include "Queue.h"
+#include "DataStructure/Queue.h"
+#include "Node/Node.h"
 
-void Queue::insert(Solver::Node* node) {
+void Queue::insert(Node* node) {
     queue.push(node);
 }
 
-Solver::Node* Queue::remove() {
+Node* Queue::remove() {
     if (queue.empty()) {
         return nullptr;
     }
-    Solver::Node* topNode = queue.front();
+    Node* topNode = queue.front();
     queue.pop();
     return topNode;
 }

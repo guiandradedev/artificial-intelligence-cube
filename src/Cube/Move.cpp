@@ -1,23 +1,25 @@
-#include "Move.h"
+#include "Cube/Move.h"
 #include <unordered_map>
 #include <cstring>
+#include <functional>
 
-namespace Move {
-
-    Cube U_FW(const Cube& cube) {
+namespace Move
+{
+    Cube U_FW(const Cube &cube)
+    {
         Cube newCube = cube.cloneMatrix();
 
-        
         MiniCube temp = newCube.matrix[0][0][0];
         newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
-        newCube.matrix[1][0][0] = newCube.matrix[1][1][0]; 
+        newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
         newCube.matrix[1][1][0] = newCube.matrix[0][1][0];
         newCube.matrix[0][1][0] = temp;
 
         return newCube;
     }
 
-    Cube U_BW(const Cube& cube) {
+    Cube U_BW(const Cube &cube)
+    {
         Cube newCube = cube.cloneMatrix();
         MiniCube temp = newCube.matrix[0][0][0];
         newCube.matrix[0][0][0] = newCube.matrix[0][1][0];
@@ -27,16 +29,15 @@ namespace Move {
         return newCube;
     }
 
-
-    // L_FW estava correto.
-    Cube L_FW(const Cube& cube) {
+    Cube L_FW(const Cube &cube)
+    {
         Cube newCube = cube.cloneMatrix();
         MiniCube temp = newCube.matrix[0][0][0];
         newCube.matrix[0][0][0] = newCube.matrix[0][0][1];
         newCube.matrix[0][0][1] = newCube.matrix[1][0][1];
         newCube.matrix[1][0][1] = newCube.matrix[1][0][0];
         newCube.matrix[1][0][0] = temp;
-        
+
         newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 2) % 3;
         newCube.matrix[0][0][1].orientation = (newCube.matrix[0][0][1].orientation + 1) % 3;
         newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 2) % 3;
@@ -45,14 +46,15 @@ namespace Move {
         return newCube;
     }
 
-    Cube L_BW(const Cube& cube) {
+    Cube L_BW(const Cube &cube)
+    {
         Cube newCube = cube.cloneMatrix();
         MiniCube temp = newCube.matrix[0][0][0];
         newCube.matrix[0][0][0] = newCube.matrix[1][0][0];
         newCube.matrix[1][0][0] = newCube.matrix[1][0][1];
         newCube.matrix[1][0][1] = newCube.matrix[0][0][1];
         newCube.matrix[0][0][1] = temp;
-        
+
         newCube.matrix[0][0][0].orientation = (newCube.matrix[0][0][0].orientation + 2) % 3; // Invertido
         newCube.matrix[1][0][0].orientation = (newCube.matrix[1][0][0].orientation + 1) % 3; // Invertido
         newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 2) % 3; // Invertido
@@ -61,7 +63,8 @@ namespace Move {
         return newCube;
     }
 
-    Cube F_FW(const Cube& cube) {
+    Cube F_FW(const Cube &cube)
+    {
         Cube newCube = cube.cloneMatrix();
         MiniCube temp = newCube.matrix[1][0][0];
         newCube.matrix[1][0][0] = newCube.matrix[1][0][1];
@@ -77,43 +80,40 @@ namespace Move {
         return newCube;
     }
 
-    // x - tras | frente
-    // y - esquerda | direita
-    // z - cima | baixo
-
-    // F_BW CORRIGIDO
-    Cube F_BW(const Cube& cube) {
+    Cube F_BW(const Cube &cube)
+    {
         Cube newCube = cube.cloneMatrix();
         MiniCube temp = newCube.matrix[1][0][0];
         newCube.matrix[1][0][0] = newCube.matrix[1][1][0];
         newCube.matrix[1][1][0] = newCube.matrix[1][1][1];
         newCube.matrix[1][1][1] = newCube.matrix[1][0][1];
         newCube.matrix[1][0][1] = temp;
-        
+
         newCube.matrix[1][0][0].orientation = (newCube.matrix[1][0][0].orientation + 2) % 3;
-        newCube.matrix[1][1][0].orientation = (newCube.matrix[1][1][0].orientation + 1) % 3; 
-        newCube.matrix[1][1][1].orientation = (newCube.matrix[1][1][1].orientation + 2) % 3; 
-        newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 1) % 3; 
+        newCube.matrix[1][1][0].orientation = (newCube.matrix[1][1][0].orientation + 1) % 3;
+        newCube.matrix[1][1][1].orientation = (newCube.matrix[1][1][1].orientation + 2) % 3;
+        newCube.matrix[1][0][1].orientation = (newCube.matrix[1][0][1].orientation + 1) % 3;
 
         return newCube;
     }
 
-    const char* reverse_moves(const char* key) {
-        // TODO Adicionar hash
-        if (strcmp(key, "UFW") == 0) {
-            return "UBW";
-        } else if (strcmp(key, "UBW") == 0) {
-            return "UFW";
-        } else if (strcmp(key, "LFW") == 0) {
-            return "LBW";
-        } else if (strcmp(key, "LBW") == 0) {
-            return "LFW";
-        } else if (strcmp(key, "FBW") == 0) {
-            return "FFW";
-        } else if (strcmp(key, "FFW") == 0) {
-            return "FBW";
-        } else {
-            return nullptr;
-        }
+    const bool isInverse(short int move1, short int move2)
+    {
+        // Verifica se move1 e move2 são inversos
+        return (move1 ^ 1) == (move2); // move1 xor 1 == move2
+    }
+
+    static const std::vector<std::function<Cube(const Cube &)>> movefunctions = {
+        Move::U_FW, // 0
+        Move::U_BW, // 1
+        Move::L_FW, // 2
+        Move::L_BW, // 3
+        Move::F_FW, // 4
+        Move::F_BW  // 5
+    };
+
+    Cube applyMove(Cube cube, short int mov)
+    {
+        return movefunctions[mov](cube);
     }
 }
