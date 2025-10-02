@@ -15,10 +15,10 @@ void Cube::init()
 {
 
     int colors[8][3] = {
-        {4, 2, 0}, // manteu
-        {2, 4, 1}, // manteu
-        {3, 4, 0}, // manteu
-        {4, 3, 1}, // manteu
+        {4, 2, 0}, 
+        {2, 4, 1}, 
+        {3, 4, 0}, 
+        {4, 3, 1}, 
         {2, 5, 0},
         {5, 2, 1},
         {5, 3, 0},
@@ -56,7 +56,6 @@ void Cube::print() const
             {
                 const MiniCube &cube = matrix[x][y][z];
                 std::cout 
-                        //   << cube.name << " "
                           << "Cubinho" << cube.index << " (" 
                           << x << " " << y << " " << z << ") "
                           << cube.left << " "

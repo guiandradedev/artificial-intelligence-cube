@@ -23,6 +23,7 @@ private:
     void renderOverlay();
     void drawText(float x, float y, const std::string &text, const RGB &color, void *font);
     void reshape(int w, int h);
+    static constexpr char moviments_name[6][3] = {"U", "U'", "L", "L'", "F", "F'"};
 
     void showSolutionOverlay(const std::string &nome_algoritmo, bool achou, const std::vector<short int> &path, long long duration_ms, int num_tries);
 
@@ -37,13 +38,13 @@ private:
     void keyboardListener(unsigned char key, int x, int y);
     void specialKeysListener(int key, int x, int y);
 
-    // Callbacks estáticos para o GLUT
+    //Callbacks estáticos para o GLUT
     static void displayCallback();
     static void reshapeCallback(int w, int h);
     static void keyboardCallback(unsigned char key, int x, int y);
     static void specialKeysCallback(int key, int x, int y);
 
-    // Estado da Aplicação
+    //Estado da Aplicação
     Cube cubo;
     Solver solver;
     double rotY = 0.0, rotX = 0.0;

@@ -10,6 +10,7 @@
 using namespace std;
 
 // Linux: g++ tests/commands.cpp $(find src -name "*.cpp" | grep -v "src/main.cpp" | grep -v "src/UI/") -I ./includes -o test_runner && ./test_runner
+
 void path_reconstruct(const char* name, std::vector<short int> path, int num_tries, long long duration_ms) {
     cout << "\nExecucão do algoritmo " << name << endl;
     cout << "Reconstrucão do cubo: ";
