@@ -214,6 +214,7 @@ void UI::showSolutionOverlay(const std::string &nome_algoritmo, bool achou, cons
         algoritm_message = "Caminho " + nome_algoritmo;
         execution_time_message = "Tempo de execucao: " + std::to_string(duration_ms) + " ms";
         num_tries_message = "Numero de estados visitados: " + std::to_string(num_tries);
+        num_moves_message = "Numero de movimentos: " + std::to_string(path.size());
         if (!path.empty())
         {
             for (size_t i = 0; i < path.size() - 1; ++i)
@@ -268,6 +269,11 @@ void UI::renderOverlay()
     if (!num_tries_message.empty())
     {
         drawText(10.0f, y_pos, num_tries_message, {1.0f, 0.0f, 0.0f}, GLUT_BITMAP_HELVETICA_18);
+        y_pos -= line_height; // Move a posição Y para a próxima linha
+    }
+    if (!num_moves_message.empty())
+    {
+        drawText(10.0f, y_pos, num_moves_message, {1.0f, 0.0f, 0.0f}, GLUT_BITMAP_HELVETICA_18);
     }
 
     // Desenha um texto de ajuda fixo

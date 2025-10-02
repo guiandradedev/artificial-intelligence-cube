@@ -50,7 +50,7 @@ private:
     double rotY = 0.0, rotX = 0.0;
     const float OFFSET = 0.01f;                   // separação entre cubinhos
     const float SIZE = 0.5f;                      // semi-tamanho do cubinho
-    std::string path_message, execution_time_message, algoritm_message, num_tries_message;
+    std::string path_message, execution_time_message, algoritm_message, num_tries_message, num_moves_message;
 
     // Ponteiro estático para a instância única da UI
     static UI *instance;
