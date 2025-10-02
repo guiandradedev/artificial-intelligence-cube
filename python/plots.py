@@ -79,6 +79,7 @@ ax1.plot(shuffles, astar_time, marker='^', label='A* Time (ms)', color='green')
 ax1.set_xlabel('Shuffles')
 ax1.set_ylabel('Tempo (ms)')
 ax1.set_title('Tempo vs Shuffles')
+ax1.set_yscale('log')
 ax1.legend()
 ax1.grid(True)
 
