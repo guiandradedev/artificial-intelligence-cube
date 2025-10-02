@@ -114,20 +114,32 @@ void UI::keyboardListener(unsigned char key, int x, int y)
     } // reset da câmera
     if (key == 'l' || key == 'L' || key == 'u' || key == 'U' || key == 'f' || key == 'F')
     {
-        if (key == 'l')
+        if (key == 'l'){
             cubo = Move::L_FW(cubo);
-        if (key == 'L')
+            std::cout<<"Movimentou L"<< std::endl;
+        }
+        if (key == 'L'){
             cubo = Move::L_BW(cubo);
-        if (key == 'f')
+            std::cout<<"Movimentou L'"<< std::endl;
+        }
+        if (key == 'f'){
             cubo = Move::F_FW(cubo);
-        if (key == 'F')
+            std::cout<<"Movimentou F"<< std::endl;
+        }
+        if (key == 'F'){
             cubo = Move::F_BW(cubo);
-        if (key == 'u')
+            std::cout<<"Movimentou F'"<< std::endl;
+        }
+        if (key == 'u'){
             cubo = Move::U_FW(cubo);
-        if (key == 'U')
+            std::cout<<"Movimentou U" << std::endl;
+        }
+        if (key == 'U'){
             cubo = Move::U_BW(cubo);
+            std::cout<<"Movimentou U'"<< std::endl;
+        }
 
-        std::cout << "Mudou" << std::endl;
+       
         glutPostRedisplay();
     }
     std::vector<short int> path;
