@@ -1,5 +1,5 @@
-#include <Cube.h>
-#include <Move.h>
+#include <Cube/Cube.h>
+#include <Cube/Move.h>
 #include <unordered_map>
 #include <iostream>
 #include <queue>
@@ -8,33 +8,7 @@
 #include <chrono>
 
 // comando para compilar: g++ ./DatabaseGenerator.cpp ./src/Cube.cpp ./src/Move.cpp ./src/MiniCube.cpp -I ./src/headers/ -std=c++17 -o2 -o generate_db
-
-namespace std
-{
-    template <>
-    struct hash<Cube>
-    {
-        size_t operator()(const Cube &c) const
-        {
-            size_t h = 0;
-            for (int x = 0; x < 2; ++x)
-            {
-                for (int y = 0; y < 2; ++y)
-                {
-                    for (int z = 0; z < 2; ++z)
-                    {
-                        const MiniCube &m = c.matrix[x][y][z];
-                        // Usando o índice da peça para um hash mais estável
-                        h ^= std::hash<int>{}(m.index) + 0x9e3779b9 + (h << 6) + (h >> 2);
-                        h ^= std::hash<short>{}(m.orientation) + 0x9e3779b9 + (h << 6) + (h >> 2);
-                    }
-                }
-            }
-            return h;
-        }
-    };
-}
-
+// g++ ./tools/DatabaseGenerator.cpp ./src/Cube/Cube.cpp ./src/Cube/Move.cpp ./src/Cube/MiniCube.cpp -I ./includes/ -std=c++17 -o2 -o generate_db
 int main()
 {
     auto start_time = std::chrono::high_resolution_clock::now();

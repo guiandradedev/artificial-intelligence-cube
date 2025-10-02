@@ -1,14 +1,8 @@
 #pragma once
 
-#include "Cube.h"
+#include "Cube/Cube.h"
 
 namespace Move {
-
-    // enum class Move_values {
-    //     UFW = 0, UBW = 1,
-    //     LFW = 2, LBW = 3,
-    //     FFW = 4, FBW = 5
-    // };
 
     // Movimentações possíveis (que geram novos estado//novas instâncias do cubo)
 
@@ -29,7 +23,7 @@ namespace Move {
     Cube L_BW(const Cube& cube);  // L (Left) sentido anti-horário
     Cube F_BW(const Cube& cube);  // F (Front) sentido anti-horário
 
-    // const char* reverse_moves(const char* key);
+    Cube applyMove(Cube cube, short int mov);
 
     const bool isInverse(short int move1, short int move2);
 }
